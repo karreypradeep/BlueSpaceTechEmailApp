@@ -7,21 +7,30 @@ import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.mail.SimpleMailMessage;
 
+import com.bluespacetech.notifications.email.entity.EmailContactGroup;
+import com.bluespacetech.notifications.email.util.ContactGroupMailMessage;
 import com.bluespacetech.notifications.email.valueobjects.EmailContactGroupVO;
 
 
-public class EmailGroupContactItemProcessor implements ItemProcessor<EmailContactGroupVO, SimpleMailMessage> {
+public class EmailGroupContactItemProcessor implements ItemProcessor<EmailContactGroupVO, ContactGroupMailMessage> {
 
 	private static final Logger log = LoggerFactory.getLogger(EmailGroupContactItemProcessor.class);
 
 	@Override
-	public SimpleMailMessage process(final EmailContactGroupVO emailContactGroupVO) throws Exception {
-		final SimpleMailMessage message = new SimpleMailMessage();
-		message.setTo(emailContactGroupVO.getContactEmail());
-		message.setFrom(emailContactGroupVO.getFromAddress());
-		message.setSubject(emailContactGroupVO.getSubject());
-		message.setSentDate(new Date());
-		message.setText(emailContactGroupVO.getMessage());
-		return message;
+	public ContactGroupMailMessage process(final EmailContactGroupVO emailContactGroupVO) throws Exception {
+		final ContactGroupMailMessage contactGroupMailMessage = new ContactGroupMailMessage();
+		final SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+		simpleMailMessage.setTo(emailContactGroupVO.getContactEmail());
+		simpleMailMessage.setFrom(emailContactGroupVO.getFromAddress());
+		simpleMailMessage.setSubject(emailContactGroupVO.getSubject());
+		simpleMailMessage.setSentDate(new Date());
+		simpleMailMessage.setText(emailContactGroupVO.getMessage());
+		final EmailContactGroup emailContactGroup = new EmailContactGroup();
+		emailContactGroup.setContactId(emailContactGroupVO.getContactId());
+		emailContactGroup.setGroupId(emailContactGroupVO.getGroupId());
+		emailContactGroup.setMessage(emailContactGroupVO.getMessage());
+		contactGroupMailMessage.setEmailContactGroup(emailContactGroup);
+		contactGroupMailMessage.setSimpleMailMessage(simpleMailMessage);
+		return contactGroupMailMessage;
 	}
 }

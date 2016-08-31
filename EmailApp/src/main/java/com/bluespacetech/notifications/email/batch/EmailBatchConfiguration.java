@@ -11,15 +11,14 @@ import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.JdbcCursorItemReader;
-import org.springframework.batch.item.mail.SimpleMailMessageItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.MailSender;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
+import com.bluespacetech.notifications.email.util.ContactGroupMailMessage;
 import com.bluespacetech.notifications.email.valueobjects.EmailContactGroupVO;
 
 @Configuration
@@ -58,8 +57,8 @@ public class EmailBatchConfiguration {
 	}
 
 	@Bean
-	public ItemWriter<SimpleMailMessage> simpleEmailWriter(MailSender javaMailSender) {
-		final SimpleMailMessageItemWriter writer = new SimpleMailMessageItemWriter();
+	public ItemWriter<ContactGroupMailMessage> simpleEmailWriter(MailSender javaMailSender) {
+		final ContactGroupMailMessageItemWriter writer = new ContactGroupMailMessageItemWriter();
 		writer.setMailSender(javaMailSender);
 		return writer;
 	}
@@ -79,7 +78,7 @@ public class EmailBatchConfiguration {
 
 	@Bean
 	public Step step1() {
-		return stepBuilderFactory.get("step1").<EmailContactGroupVO, SimpleMailMessage> chunk(10)
+		return stepBuilderFactory.get("step1").<EmailContactGroupVO, ContactGroupMailMessage> chunk(10)
 				.reader(databaseItemReader(dataSource, null, null, null))
 				.processor(processor(null, null))
 				.writer(simpleEmailWriter(javaMailSender)).build();
