@@ -1,4 +1,4 @@
-package com.bluespacetech.notifications.email;
+package com.bluespacetech.notifications.email.worker;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import com.bluespacetech.contactgroup.entity.ContactGroup;
+import com.bluespacetech.notifications.email.valueobjects.EmailVO;
 
 @Component
 public class EmailContactGroupWorker{

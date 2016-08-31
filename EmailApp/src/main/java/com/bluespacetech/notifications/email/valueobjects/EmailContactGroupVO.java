@@ -2,10 +2,11 @@
  * This document is a part of the source code and related artifacts for bluespacetech. www.bluespacetech.com
  * Copyright © 2015 bluespacetech
  */
-package com.bluespacetech.notifications.email;
+package com.bluespacetech.notifications.email.valueobjects;
 
 import java.io.Serializable;
 
+import com.bluespacetech.notifications.email.entity.Email;
 
 /**
  * @author pradeep created date 13-Jul-2016

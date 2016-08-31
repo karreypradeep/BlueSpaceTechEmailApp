@@ -1,4 +1,4 @@
-package com.bluespacetech.notifications.email;
+package com.bluespacetech.notifications.email.util;
 
 import java.util.Properties;
 

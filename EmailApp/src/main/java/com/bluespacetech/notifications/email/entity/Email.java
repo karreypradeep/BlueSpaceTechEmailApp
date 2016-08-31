@@ -2,7 +2,7 @@
  * This document is a part of the source code and related artifacts for bluespacetech. www.bluespacetech.com
  * Copyright © 2015 bluespacetech
  */
-package com.bluespacetech.notifications.email;
+package com.bluespacetech.notifications.email.entity;
 
 import java.io.Serializable;
 

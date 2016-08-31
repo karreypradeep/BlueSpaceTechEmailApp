@@ -1,4 +1,4 @@
-package com.bluespacetech.notifications.email;
+package com.bluespacetech.notifications.email.batch;
 
 import javax.sql.DataSource;
 
@@ -19,6 +19,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+
+import com.bluespacetech.notifications.email.valueobjects.EmailContactGroupVO;
 
 @Configuration
 @EnableBatchProcessing

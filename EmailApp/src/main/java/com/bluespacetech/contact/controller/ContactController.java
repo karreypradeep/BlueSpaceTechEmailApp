@@ -4,20 +4,13 @@
  */
 package com.bluespacetech.contact.controller;
 
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParameter;
-import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,33 +30,11 @@ import com.bluespacetech.core.exceptions.BusinessException;
  */
 @RestController
 @RequestMapping("/contacts")
+@CrossOrigin
 public class ContactController {
 
 	@Autowired
 	ContactService contactService;
-
-	@Autowired
-	private JobLauncher jobLauncher;
-
-	@Autowired
-	@Qualifier("groupEmailJob")
-	private Job job;
-
-	@RequestMapping(value = "/job", method = RequestMethod.GET)
-	public void job() {
-		try {
-			final Map<String, JobParameter> jobParametersMap = new HashMap<String, JobParameter>();
-			jobParametersMap.put("groupId", new JobParameter(1L));
-			jobParametersMap.put("dateAndTime", new JobParameter(new Date()));
-			jobParametersMap.put("message", new JobParameter("Email Message"));
-			jobParametersMap.put("subject", new JobParameter("Email Subject"));
-			jobLauncher.run(job, new JobParameters(jobParametersMap));
-
-		} catch (final Exception e) {
-			throw new RuntimeException(e);
-
-		}
-	}
 
 	@ResponseStatus(HttpStatus.CREATED)
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)

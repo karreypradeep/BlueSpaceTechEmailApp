@@ -1,8 +1,10 @@
-package com.bluespacetech.notifications.email;
+package com.bluespacetech.notifications.email.valueobjects;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.bluespacetech.notifications.email.entity.Email;
 
 public class EmailVO implements Serializable{
 
@@ -14,8 +16,9 @@ public class EmailVO implements Serializable{
 	private String fromAddress;
 	private String message;
 	private String subject;
-
 	private Email email;
+	private Long groupId;
+	private final List<Long> groupIdList = new ArrayList<Long>();
 
 	/**
 	 * @return the toAddress
@@ -103,6 +106,28 @@ public class EmailVO implements Serializable{
 	 */
 	public void setEmail(Email email) {
 		this.email = email;
+	}
+
+	/**
+	 * @return the groupId
+	 */
+	public Long getGroupId() {
+		return groupId;
+	}
+
+	/**
+	 * @param groupId
+	 *            the groupId to set
+	 */
+	public void setGroupId(Long groupId) {
+		this.groupId = groupId;
+	}
+
+	/**
+	 * @return the groupIdList
+	 */
+	public List<Long> getGroupIdList() {
+		return groupIdList;
 	}
 
 }

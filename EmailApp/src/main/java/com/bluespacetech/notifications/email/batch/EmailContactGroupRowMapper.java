@@ -1,9 +1,11 @@
-package com.bluespacetech.notifications.email;
+package com.bluespacetech.notifications.email.batch;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.springframework.jdbc.core.RowMapper;
+
+import com.bluespacetech.notifications.email.valueobjects.EmailContactGroupVO;
 
 public class EmailContactGroupRowMapper implements RowMapper<EmailContactGroupVO> {
 

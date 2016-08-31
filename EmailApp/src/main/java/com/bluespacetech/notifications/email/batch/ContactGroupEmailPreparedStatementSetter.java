@@ -1,4 +1,4 @@
-package com.bluespacetech.notifications.email;
+package com.bluespacetech.notifications.email.batch;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
