@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.javamail.JavaMailSender;
 
+import com.bluespacetech.notifications.email.service.EmailContactGroupService;
 import com.bluespacetech.notifications.email.util.ContactGroupMailMessage;
 import com.bluespacetech.notifications.email.valueobjects.EmailContactGroupVO;
 
@@ -30,6 +31,9 @@ public class EmailBatchConfiguration {
 
 	@Autowired
 	public StepBuilderFactory stepBuilderFactory;
+
+	@Autowired
+	public EmailContactGroupService emailContactGroupService;
 
 	@Autowired
 	public JavaMailSender javaMailSender;
@@ -57,9 +61,11 @@ public class EmailBatchConfiguration {
 	}
 
 	@Bean
-	public ItemWriter<ContactGroupMailMessage> simpleEmailWriter(MailSender javaMailSender) {
+	public ItemWriter<ContactGroupMailMessage> simpleEmailWriter(MailSender javaMailSender,
+			final EmailContactGroupService emailContactGroupService) {
 		final ContactGroupMailMessageItemWriter writer = new ContactGroupMailMessageItemWriter();
 		writer.setMailSender(javaMailSender);
+		writer.setEmailContactGroupService(emailContactGroupService);
 		return writer;
 	}
 
@@ -81,7 +87,7 @@ public class EmailBatchConfiguration {
 		return stepBuilderFactory.get("step1").<EmailContactGroupVO, ContactGroupMailMessage> chunk(10)
 				.reader(databaseItemReader(dataSource, null, null, null))
 				.processor(processor(null, null))
-				.writer(simpleEmailWriter(javaMailSender)).build();
+				.writer(simpleEmailWriter(javaMailSender, emailContactGroupService)).build();
 	}
 
 }

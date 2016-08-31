@@ -1,5 +1,6 @@
 package com.bluespacetech.notifications.email.batch;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.batch.item.ItemWriter;
@@ -10,11 +11,16 @@ import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.util.Assert;
 
+import com.bluespacetech.core.exceptions.BusinessException;
+import com.bluespacetech.notifications.email.entity.EmailContactGroup;
+import com.bluespacetech.notifications.email.service.EmailContactGroupService;
 import com.bluespacetech.notifications.email.util.ContactGroupMailMessage;
 
 public class ContactGroupMailMessageItemWriter implements ItemWriter<ContactGroupMailMessage>, InitializingBean {
 
 	private MailSender mailSender;
+
+	private EmailContactGroupService emailContactGroupService;
 	// private MailSender mailSender;
 
 	// private MailErrorHandler mailErrorHandler = new
@@ -42,6 +48,14 @@ public class ContactGroupMailMessageItemWriter implements ItemWriter<ContactGrou
 	 */
 
 	/**
+	 * @param emailContactGroupService
+	 *            the emailContactGroupService to set
+	 */
+	public void setEmailContactGroupService(EmailContactGroupService emailContactGroupService) {
+		this.emailContactGroupService = emailContactGroupService;
+	}
+
+	/**
 	 * Check mandatory properties (mailSender).
 	 * 
 	 * @throws IllegalStateException
@@ -63,13 +77,17 @@ public class ContactGroupMailMessageItemWriter implements ItemWriter<ContactGrou
 	public void write(List<? extends ContactGroupMailMessage> items) throws MailException {
 		try {
 			final SimpleMailMessage[] messages = new SimpleMailMessage[items.size()];
+			final List<EmailContactGroup> emailContactGroups = new ArrayList<EmailContactGroup>();
 			int count = 0;
 			for (final ContactGroupMailMessage contactGroupMailMessage : items) {
 				messages[count] = contactGroupMailMessage.getSimpleMailMessage();
+				emailContactGroups.add(contactGroupMailMessage.getEmailContactGroup());
 				count++;
 			}
+			emailContactGroupService.createEmailContactGroups(emailContactGroups);
 			mailSender.send(messages);
 		} catch (final MailSendException e) {
+			System.out.println(e);
 			/*
 			 * final Map<Object, Exception> failedMessages =
 			 * e.getFailedMessages(); for (final Entry<Object, Exception> entry
@@ -77,6 +95,9 @@ public class ContactGroupMailMessageItemWriter implements ItemWriter<ContactGrou
 			 * mailErrorHandler.handle((SimpleMailMessage) entry.getKey(),
 			 * entry.getValue()); }
 			 */
+		} catch (final BusinessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
