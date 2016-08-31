@@ -4,18 +4,10 @@
  */
 package com.bluespacetech.notifications.email.controller;
 
-import java.io.IOException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.batch.core.Job;
@@ -38,10 +30,8 @@ import com.bluespacetech.contact.entity.Contact;
 import com.bluespacetech.contact.service.ContactService;
 import com.bluespacetech.contactgroup.service.ContactGroupService;
 import com.bluespacetech.core.exceptions.BusinessException;
-import com.bluespacetech.core.utility.CryptoUtil;
 import com.bluespacetech.notifications.email.entity.Email;
 import com.bluespacetech.notifications.email.service.EmailService;
-import com.bluespacetech.notifications.email.util.EmailUtils;
 import com.bluespacetech.notifications.email.valueobjects.EmailVO;
 
 /**
@@ -79,7 +69,7 @@ public class EmailController {
 			if (emailVO.getGroupId() != null) {
 				jobParametersMap.put("groupId", new JobParameter(emailVO.getGroupId()));
 				if (email != null) {
-					jobParametersMap.put("emailId", new JobParameter(emailVO.getGroupId()));
+					jobParametersMap.put("emailId", new JobParameter(email.getId()));
 				}
 				jobParametersMap.put("dateAndTime", new JobParameter(new Date()));
 				jobParametersMap.put("message", new JobParameter(emailVO.getMessage()));
@@ -89,7 +79,7 @@ public class EmailController {
 			} else if (emailVO.getGroupIdList() != null && !emailVO.getGroupIdList().isEmpty()) {
 				for (final Long groupId : emailVO.getGroupIdList()) {
 					if (email != null) {
-						jobParametersMap.put("emailId", new JobParameter(emailVO.getGroupId()));
+						jobParametersMap.put("emailId", new JobParameter(email.getId()));
 					}
 					jobParametersMap.put("groupId", new JobParameter(groupId));
 					jobParametersMap.put("dateAndTime", new JobParameter(new Date()));
@@ -107,22 +97,34 @@ public class EmailController {
 
 	@RequestMapping(value = "/unsubscribe", method = RequestMethod.GET)
 	public void unsubscribeToGroup(HttpServletRequest request) {
+		/*
+		 * String reqContactId = null; try { reqContactId =
+		 * URLDecoder.decode(request.getParameter("contactId"), "UTF-8"); }
+		 * catch (final UnsupportedEncodingException e1) { // TODO
+		 * Auto-generated catch block e1.printStackTrace(); } String reqGroupId
+		 * = null; try { reqGroupId =
+		 * URLDecoder.decode(request.getParameter("groupId"), "UTF-8"); } catch
+		 * (final UnsupportedEncodingException e1) { // TODO Auto-generated
+		 * catch block e1.printStackTrace(); } final String contactEmail =
+		 * request.getParameter("contactEmail"); final CryptoUtil cryptoUtil =
+		 * new CryptoUtil(); Long contactId = null; Long groupId = null; try {
+		 * contactId =
+		 * Long.valueOf(cryptoUtil.decrypt(EmailUtils.EMAIL_SECRET_KEY,
+		 * reqContactId)); groupId =
+		 * Long.valueOf(cryptoUtil.decrypt(EmailUtils.EMAIL_SECRET_KEY,
+		 * reqGroupId)); } catch (InvalidKeyException | NoSuchAlgorithmException
+		 * | InvalidKeySpecException | NoSuchPaddingException |
+		 * InvalidAlgorithmParameterException | IllegalBlockSizeException |
+		 * BadPaddingException | IOException e) { // TODO Auto-generated catch
+		 * block e.printStackTrace(); }
+		 */
 		final String reqContactId = request.getParameter("contactId");
 		final String reqGroupId = request.getParameter("groupId");
 		final String contactEmail = request.getParameter("contactEmail");
-		final CryptoUtil cryptoUtil = new CryptoUtil();
-		Long contactId = null;
-		Long groupId = null;
-		try {
-			contactId = Long.valueOf(cryptoUtil.decrypt(EmailUtils.EMAIL_SECRET_KEY, reqContactId));
-			groupId = Long.valueOf(cryptoUtil.decrypt(EmailUtils.EMAIL_SECRET_KEY, reqGroupId));
-		} catch (InvalidKeyException | NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException
-				| InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException
-				| IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		if (contactId != null) {
+		Long groupId, contactId = null;
+		contactId = Long.valueOf(reqContactId);
+		groupId = Long.valueOf(reqGroupId);
+		if (contactId != null && groupId != null) {
 			final Contact contact = contactService.getContactById(contactId);
 			if (!contact.getEmail().equals(contactEmail)) {
 
