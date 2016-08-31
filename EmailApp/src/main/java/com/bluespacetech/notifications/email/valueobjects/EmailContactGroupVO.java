@@ -6,8 +6,6 @@ package com.bluespacetech.notifications.email.valueobjects;
 
 import java.io.Serializable;
 
-import com.bluespacetech.notifications.email.entity.Email;
-
 /**
  * @author pradeep created date 13-Jul-2016
  */
@@ -18,7 +16,7 @@ public class EmailContactGroupVO implements Serializable {
 	 */
 	private static final long serialVersionUID = 237003043434123667L;
 
-	private Email email;
+	private Long emailId;
 
 	private Long contactId;
 
@@ -37,18 +35,18 @@ public class EmailContactGroupVO implements Serializable {
 	private String fromAddress;
 
 	/**
-	 * @return the email
+	 * @return the emailId
 	 */
-	public Email getEmail() {
-		return email;
+	public Long getEmailId() {
+		return emailId;
 	}
 
 	/**
-	 * @param email
-	 *            the email to set
+	 * @param emailId
+	 *            the emailId to set
 	 */
-	public void setEmail(Email email) {
-		this.email = email;
+	public void setEmailId(Long emailId) {
+		this.emailId = emailId;
 	}
 
 	/**

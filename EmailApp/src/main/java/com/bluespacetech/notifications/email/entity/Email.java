@@ -27,6 +27,10 @@ public class Email extends BaseEntity implements Serializable {
 	@Column(name = "TEXT")
 	private String message;
 
+	@NotEmpty(message = "Subject is mandatory.")
+	@Column(name = "SUBJECT")
+	private String subject;
+
 	/**
 	 * @return the message
 	 */
@@ -39,6 +43,21 @@ public class Email extends BaseEntity implements Serializable {
 	 */
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	/**
+	 * @return the subject
+	 */
+	public String getSubject() {
+		return subject;
+	}
+
+	/**
+	 * @param subject
+	 *            the subject to set
+	 */
+	public void setSubject(String subject) {
+		this.subject = subject;
 	}
 
 }

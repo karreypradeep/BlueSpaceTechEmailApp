@@ -8,9 +8,6 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.bluespacetech.core.model.BaseEntity;
@@ -27,9 +24,8 @@ public class EmailContactGroup extends BaseEntity implements Serializable {
 	 */
 	private static final long serialVersionUID = 7245273784297025334L;
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "EMAIL_ID")
-	private Email email;
+	@Column(name = "EMAIL_ID", nullable = false)
+	private Long emailId;
 
 	@Column(name = "CONTACT_ID", nullable = false)
 	private Long contactId;
@@ -40,19 +36,22 @@ public class EmailContactGroup extends BaseEntity implements Serializable {
 	@Column(name = "TEXT")
 	private String message;
 
+	@Column(name = "SUBJECT")
+	private String subject;
+
 	/**
-	 * @return the email
+	 * @return the emailId
 	 */
-	public Email getEmail() {
-		return email;
+	public Long getEmailId() {
+		return emailId;
 	}
 
 	/**
-	 * @param email
-	 *            the email to set
+	 * @param emailId
+	 *            the emailId to set
 	 */
-	public void setEmail(Email email) {
-		this.email = email;
+	public void setEmailId(Long emailId) {
+		this.emailId = emailId;
 	}
 
 	/**
@@ -98,6 +97,21 @@ public class EmailContactGroup extends BaseEntity implements Serializable {
 	 */
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	/**
+	 * @return the subject
+	 */
+	public String getSubject() {
+		return subject;
+	}
+
+	/**
+	 * @param subject
+	 *            the subject to set
+	 */
+	public void setSubject(String subject) {
+		this.subject = subject;
 	}
 
 }

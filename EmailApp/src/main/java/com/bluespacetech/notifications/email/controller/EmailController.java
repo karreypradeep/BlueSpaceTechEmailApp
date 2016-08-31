@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bluespacetech.core.exceptions.BusinessException;
+import com.bluespacetech.notifications.email.entity.Email;
+import com.bluespacetech.notifications.email.service.EmailService;
 import com.bluespacetech.notifications.email.valueobjects.EmailVO;
 
 /**
@@ -39,6 +41,9 @@ public class EmailController {
 	private JobLauncher jobLauncher;
 
 	@Autowired
+	private EmailService emailService;
+
+	@Autowired
 	@Qualifier("groupEmailJob")
 	private Job job;
 
@@ -46,14 +51,24 @@ public class EmailController {
 	public void job(@RequestBody final EmailVO emailVO) {
 		try {
 			final Map<String, JobParameter> jobParametersMap = new HashMap<String, JobParameter>();
+			Email email = null;
+			if (!emailVO.isPersonalizedEmail()) {
+				email = emailService.createEmail(emailVO);
+			}
 			if (emailVO.getGroupId() != null) {
 				jobParametersMap.put("groupId", new JobParameter(emailVO.getGroupId()));
+				if (email != null) {
+					jobParametersMap.put("emailId", new JobParameter(emailVO.getGroupId()));
+				}
 				jobParametersMap.put("dateAndTime", new JobParameter(new Date()));
 				jobParametersMap.put("message", new JobParameter(emailVO.getMessage()));
 				jobParametersMap.put("subject", new JobParameter(emailVO.getSubject()));
 				jobLauncher.run(job, new JobParameters(jobParametersMap));
 			} else if (emailVO.getGroupIdList() != null && !emailVO.getGroupIdList().isEmpty()) {
 				for (final Long groupId : emailVO.getGroupIdList()) {
+					if (email != null) {
+						jobParametersMap.put("emailId", new JobParameter(emailVO.getGroupId()));
+					}
 					jobParametersMap.put("groupId", new JobParameter(groupId));
 					jobParametersMap.put("dateAndTime", new JobParameter(new Date()));
 					jobParametersMap.put("message", new JobParameter(emailVO.getMessage()));

@@ -18,6 +18,7 @@ public class EmailVO implements Serializable{
 	private String subject;
 	private Email email;
 	private Long groupId;
+	private boolean personalizedEmail;
 	private final List<Long> groupIdList = new ArrayList<Long>();
 
 	/**
@@ -128,6 +129,21 @@ public class EmailVO implements Serializable{
 	 */
 	public List<Long> getGroupIdList() {
 		return groupIdList;
+	}
+
+	/**
+	 * @return the personalizedEmail
+	 */
+	public boolean isPersonalizedEmail() {
+		return personalizedEmail;
+	}
+
+	/**
+	 * @param personalizedEmail
+	 *            the personalizedEmail to set
+	 */
+	public void setPersonalizedEmail(boolean personalizedEmail) {
+		this.personalizedEmail = personalizedEmail;
 	}
 
 }

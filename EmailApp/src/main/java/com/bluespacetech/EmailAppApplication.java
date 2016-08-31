@@ -10,6 +10,5 @@ public class EmailAppApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(EmailAppApplication.class, args);
-
 	}
 }

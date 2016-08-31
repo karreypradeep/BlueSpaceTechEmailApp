@@ -13,15 +13,17 @@ public class EmailContactGroupRowMapper implements RowMapper<EmailContactGroupVO
 
 	private String subject;
 
+	private Long emailId;
+
 	@Override
 	public EmailContactGroupVO mapRow(ResultSet rs, int rowNum) throws SQLException {
 		final EmailContactGroupVO emailContactGroupVO = new EmailContactGroupVO();
 		emailContactGroupVO.setContactFirstName(rs.getString("FIRST_NAME"));
 		emailContactGroupVO.setContactLastName(rs.getString("LAST_NAME"));
 		emailContactGroupVO.setContactEmail(rs.getString("EMAIL"));
-		emailContactGroupVO.setFromAddress(rs.getString("EMAIL"));
 		emailContactGroupVO.setMessage(getMessage());
 		emailContactGroupVO.setSubject(getSubject());
+		emailContactGroupVO.setEmailId(getEmailId());
 		emailContactGroupVO.setGroupId(rs.getLong("GROUP_ID"));
 		emailContactGroupVO.setContactId(rs.getLong("CONTACT_ID"));
 		return emailContactGroupVO;
@@ -55,6 +57,21 @@ public class EmailContactGroupRowMapper implements RowMapper<EmailContactGroupVO
 	 */
 	public void setSubject(String subject) {
 		this.subject = subject;
+	}
+
+	/**
+	 * @return the emailId
+	 */
+	public Long getEmailId() {
+		return emailId;
+	}
+
+	/**
+	 * @param emailId
+	 *            the emailId to set
+	 */
+	public void setEmailId(Long emailId) {
+		this.emailId = emailId;
 	}
 
 }

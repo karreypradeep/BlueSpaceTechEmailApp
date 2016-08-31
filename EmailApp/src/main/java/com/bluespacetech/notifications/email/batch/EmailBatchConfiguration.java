@@ -47,13 +47,16 @@ public class EmailBatchConfiguration {
 	@Bean
 	@StepScope
 	JdbcCursorItemReader<EmailContactGroupVO> databaseItemReader(DataSource dataSource,
-			@Value("#{jobParameters[groupId]}") Long groupId, @Value("#{jobParameters[message]}") String message,
+			@Value("#{jobParameters[groupId]}") Long groupId,@Value("#{jobParameters[emailId]}") Long emailId, @Value("#{jobParameters[message]}") String message,
 			@Value("#{jobParameters[subject]}") String subject) {
 		final JdbcCursorItemReader<EmailContactGroupVO> databaseReader = new JdbcCursorItemReader<EmailContactGroupVO>();
 		databaseReader.setDataSource(dataSource);
 		final EmailContactGroupRowMapper emailContactGroupRowMapper = new EmailContactGroupRowMapper();
 		emailContactGroupRowMapper.setMessage(message);
 		emailContactGroupRowMapper.setSubject(subject);
+		if (emailId != null) {
+			emailContactGroupRowMapper.setEmailId(emailId);
+		}
 		databaseReader.setRowMapper(emailContactGroupRowMapper);
 		databaseReader.setSql(QUERY_FIND_CONTACTS);
 		QUERY_FIND_CONTACTS = QUERY_FIND_CONTACTS + " AND CG.GROUP_ID = " + groupId;
@@ -71,8 +74,7 @@ public class EmailBatchConfiguration {
 
 	@Bean
 	@StepScope
-	public EmailGroupContactItemProcessor processor(@Value("#{jobParameters[message]}") String message,
-			@Value("#{jobParameters[subject]}") String subject) {
+	public EmailGroupContactItemProcessor processor() {
 		return new EmailGroupContactItemProcessor();
 	}
 
@@ -85,8 +87,8 @@ public class EmailBatchConfiguration {
 	@Bean
 	public Step step1() {
 		return stepBuilderFactory.get("step1").<EmailContactGroupVO, ContactGroupMailMessage> chunk(10)
-				.reader(databaseItemReader(dataSource, null, null, null))
-				.processor(processor(null, null))
+				.reader(databaseItemReader(dataSource, null, null, null, null))
+				.processor(processor())
 				.writer(simpleEmailWriter(javaMailSender, emailContactGroupService)).build();
 	}
 

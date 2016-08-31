@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.bluespacetech.core.exceptions.BusinessException;
 import com.bluespacetech.notifications.email.entity.Email;
 import com.bluespacetech.notifications.email.repository.EmailRepository;
+import com.bluespacetech.notifications.email.valueobjects.EmailVO;
 
 /**
  * class for EmailService
@@ -38,6 +39,18 @@ public class EmailServiceImpl implements EmailService {
 	public Email createEmail(final Email email) throws BusinessException {
 		final Email newEmail = emailRepository.save(email);
 		return newEmail;
+	}
+
+	@Override
+	// @PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or
+	// ((hasAuthority('ACC_TYPE_ADMIN') or hasAuthority('ACC_TYPE_EMPLOYEE'))
+	// and (hasAuthority('CREATE_PERSON') ))")
+	public Email createEmail(final EmailVO emailVO) throws BusinessException {
+		Email email = new Email();
+		email.setMessage(emailVO.getMessage());
+		email.setSubject(emailVO.getSubject());
+		email = createEmail(email);
+		return email;
 	}
 
 	/*
