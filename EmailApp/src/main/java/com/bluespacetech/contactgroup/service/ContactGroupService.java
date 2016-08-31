@@ -27,4 +27,6 @@ public interface ContactGroupService {
 
 	ContactGroup updateContactGroup(final ContactGroup contactGroup) throws BusinessException;
 
+	ContactGroup unsubscribeContactGroup(final Long contactId, final Long groupId) throws BusinessException;
+
 }

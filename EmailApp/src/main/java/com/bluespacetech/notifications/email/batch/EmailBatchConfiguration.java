@@ -42,7 +42,7 @@ public class EmailBatchConfiguration {
 	public DataSource dataSource;
 
 	private static String QUERY_FIND_CONTACTS = "SELECT FIRST_NAME, LAST_NAME, EMAIL, GROUP_ID, CONTACT_ID FROM CONTACTS "
-			+ "C, CONTACT_GROUP CG WHERE CG.CONTACT_ID = C.ID ";
+			+ "C, CONTACT_GROUP CG WHERE CG.CONTACT_ID = C.ID AND CG.UNSUBSCRIBED = 0";
 
 	@Bean
 	@StepScope
@@ -74,8 +74,11 @@ public class EmailBatchConfiguration {
 
 	@Bean
 	@StepScope
-	public EmailGroupContactItemProcessor processor() {
-		return new EmailGroupContactItemProcessor();
+	public EmailGroupContactItemProcessor processor(
+			@Value("#{jobParameters[emailRequestURL]}") String emailRequestURL) {
+		final EmailGroupContactItemProcessor processor = new EmailGroupContactItemProcessor();
+		processor.setEmailRequestURL(emailRequestURL);
+		return processor;
 	}
 
 
@@ -88,7 +91,7 @@ public class EmailBatchConfiguration {
 	public Step step1() {
 		return stepBuilderFactory.get("step1").<EmailContactGroupVO, ContactGroupMailMessage> chunk(10)
 				.reader(databaseItemReader(dataSource, null, null, null, null))
-				.processor(processor())
+				.processor(processor(null))
 				.writer(simpleEmailWriter(javaMailSender, emailContactGroupService)).build();
 	}
 

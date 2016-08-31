@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.bluespacetech.contactgroup.entity.ContactGroup;
 import com.bluespacetech.contactgroup.entity.ContactGroupPK;
 import com.bluespacetech.contactgroup.repository.ContactGroupRepository;
+import com.bluespacetech.contactgroup.repository.ContactGroupRepositoryCustom;
 import com.bluespacetech.core.exceptions.BusinessException;
 
 /**
@@ -21,10 +22,13 @@ import com.bluespacetech.core.exceptions.BusinessException;
  */
 @Service
 public class ContactGroupServiceImpl implements ContactGroupService {
-	
+
 	@Autowired
 	private ContactGroupRepository contactGroupRepository;
-	
+
+	@Autowired
+	private ContactGroupRepositoryCustom contactGroupRepositoryCustom;
+
 	@Override
 	public ContactGroup getContactGroupById(ContactGroupPK contactGroupPK) {
 		return contactGroupRepository.findOne(contactGroupPK);
@@ -49,5 +53,14 @@ public class ContactGroupServiceImpl implements ContactGroupService {
 	public ContactGroup updateContactGroup(ContactGroup contactGroup) throws BusinessException {
 		return contactGroupRepository.save(contactGroup);
 	}
+
+	@Override
+	public ContactGroup unsubscribeContactGroup(Long contactId, Long groupId) throws BusinessException {
+		final ContactGroup contactGroup = contactGroupRepositoryCustom.getContactGroupByContactIdAndGroupId(contactId,
+				groupId);
+		contactGroup.setUnSubscribed(true);
+		return updateContactGroup(contactGroup);
+	}
+
 
 }

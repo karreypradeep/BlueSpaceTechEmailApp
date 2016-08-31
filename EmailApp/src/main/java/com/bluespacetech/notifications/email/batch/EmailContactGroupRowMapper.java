@@ -10,9 +10,7 @@ import com.bluespacetech.notifications.email.valueobjects.EmailContactGroupVO;
 public class EmailContactGroupRowMapper implements RowMapper<EmailContactGroupVO> {
 
 	private String message;
-
 	private String subject;
-
 	private Long emailId;
 
 	@Override
@@ -73,5 +71,6 @@ public class EmailContactGroupRowMapper implements RowMapper<EmailContactGroupVO
 	public void setEmailId(Long emailId) {
 		this.emailId = emailId;
 	}
+
 
 }
