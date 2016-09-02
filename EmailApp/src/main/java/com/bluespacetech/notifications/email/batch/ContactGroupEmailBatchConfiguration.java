@@ -24,7 +24,7 @@ import com.bluespacetech.notifications.email.valueobjects.EmailContactGroupVO;
 
 @Configuration
 @EnableBatchProcessing
-public class EmailBatchConfiguration {
+public class ContactGroupEmailBatchConfiguration {
 
 	@Autowired
 	public JobBuilderFactory jobBuilderFactory;
@@ -51,7 +51,7 @@ public class EmailBatchConfiguration {
 			@Value("#{jobParameters[subject]}") String subject) {
 		final JdbcCursorItemReader<EmailContactGroupVO> databaseReader = new JdbcCursorItemReader<EmailContactGroupVO>();
 		databaseReader.setDataSource(dataSource);
-		final EmailContactGroupRowMapper emailContactGroupRowMapper = new EmailContactGroupRowMapper();
+		final ContactGroupEmailRowMapper emailContactGroupRowMapper = new ContactGroupEmailRowMapper();
 		emailContactGroupRowMapper.setMessage(message);
 		emailContactGroupRowMapper.setSubject(subject);
 		if (emailId != null) {
@@ -74,9 +74,9 @@ public class EmailBatchConfiguration {
 
 	@Bean
 	@StepScope
-	public EmailGroupContactItemProcessor processor(
+	public GroupContactEmailItemProcessor processor(
 			@Value("#{jobParameters[emailRequestURL]}") String emailRequestURL) {
-		final EmailGroupContactItemProcessor processor = new EmailGroupContactItemProcessor();
+		final GroupContactEmailItemProcessor processor = new GroupContactEmailItemProcessor();
 		processor.setEmailRequestURL(emailRequestURL);
 		return processor;
 	}

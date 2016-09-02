@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.RowMapper;
 
 import com.bluespacetech.notifications.email.valueobjects.EmailContactGroupVO;
 
-public class EmailContactGroupRowMapper implements RowMapper<EmailContactGroupVO> {
+public class ContactGroupEmailRowMapper implements RowMapper<EmailContactGroupVO> {
 
 	private String message;
 	private String subject;

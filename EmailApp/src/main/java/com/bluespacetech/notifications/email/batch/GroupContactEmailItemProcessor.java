@@ -11,7 +11,7 @@ import com.bluespacetech.notifications.email.util.EmailUtils;
 import com.bluespacetech.notifications.email.valueobjects.EmailContactGroupVO;
 
 
-public class EmailGroupContactItemProcessor implements ItemProcessor<EmailContactGroupVO, ContactGroupMailMessage> {
+public class GroupContactEmailItemProcessor implements ItemProcessor<EmailContactGroupVO, ContactGroupMailMessage> {
 
 	// private static final Logger log =
 	// LoggerFactory.getLogger(EmailGroupContactItemProcessor.class);
