@@ -29,6 +29,8 @@ public class MailConfiguration {
 	private String username;
 	@Value("${mail.password}")
 	private String password;
+	@Value("${mail.smtp.ssl.trust}")
+	private String sslTrust;
 
 	@Bean(name = "javaMailSender")
 	public JavaMailSender javaMailSender() {
@@ -36,12 +38,13 @@ public class MailConfiguration {
 		final Properties mailProperties = new Properties();
 		mailProperties.put("mail.smtp.auth", auth);
 		mailProperties.put("mail.smtp.starttls.enable", starttls);
+		mailProperties.put("mail.smtp.ssl.trust", sslTrust);
 		mailSender.setJavaMailProperties(mailProperties);
 		mailSender.setHost(host);
 		mailSender.setPort(port);
 		mailSender.setProtocol(protocol);
 		mailSender.setUsername(username);
-		mailSender.setPassword(password);
+		mailSender.setPassword(password);		
 		return mailSender;
 	}
 }
