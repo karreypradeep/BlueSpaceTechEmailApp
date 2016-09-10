@@ -20,10 +20,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bluespacetech.contact.entity.Contact;
+import com.bluespacetech.contact.repository.ContactRepository;
 import com.bluespacetech.contact.searchcriteria.ContactSearchCriteria;
 import com.bluespacetech.contact.service.ContactService;
 import com.bluespacetech.contactgroup.entity.ContactGroup;
 import com.bluespacetech.core.exceptions.BusinessException;
+import com.bluespacetech.group.service.GroupService;
 
 /**
  * @author pradeep created date 30-Jan-2015
@@ -35,6 +37,12 @@ public class ContactController {
 
 	@Autowired
 	ContactService contactService;
+
+	@Autowired
+	private ContactRepository contactRepository;
+
+	@Autowired
+	GroupService groupService;
 
 	@ResponseStatus(HttpStatus.CREATED)
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -148,4 +156,30 @@ public class ContactController {
 	ResponseEntity<String> handleContactNotFoundException(final Exception e) {
 		return new ResponseEntity<String>(String.format("{\"reason\":\"%s\"}", e.getMessage()), HttpStatus.NOT_FOUND);
 	}
+
+	/*
+	 * @ResponseStatus(HttpStatus.NO_CONTENT)
+	 * 
+	 * @RequestMapping(value = "/createContacts", method = RequestMethod.GET)
+	 * public ResponseEntity<Void> createContacts() throws BusinessException {
+	 * 
+	 * final ArrayList<Contact> contacts = new ArrayList<Contact>(); for (Long i
+	 * = 0L; i < 500000L; i++) { final Contact contact1 = new Contact();
+	 * contact1.setFirstName("contact" + i); contact1.setLastName("lastname" +
+	 * i); contact1.setEmail("kpgoud533@gmail.com");
+	 * 
+	 * final Group group1 = groupService.getGroupById(1L);
+	 * 
+	 * final ContactGroup contactGroup1 = new ContactGroup();
+	 * contactGroup1.setContact(contact1); contactGroup1.setGroup(group1);
+	 * contactGroup1.setActive(true); contactGroup1.setUnSubscribed(false);
+	 * 
+	 * contact1.getContactGroups().add(contactGroup1);
+	 * 
+	 * contacts.add(contact1); if (i % 10000 == 0) {
+	 * contactRepository.save(contacts); contacts.clear(); }
+	 * 
+	 * } return new ResponseEntity<Void>(HttpStatus.OK); }
+	 */
+
 }
