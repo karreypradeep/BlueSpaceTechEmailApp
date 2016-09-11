@@ -5,15 +5,15 @@
 package com.bluespacetech.contact.searchcriteria;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author sandeep created date 24-Aug-2016
  */
-public class ContactSearchCriteria  implements Serializable{
+public class ContactSearchCriteriaResult  implements Serializable{
 	
 	private static final long serialVersionUID = -8455110031782999764L;
+	
+	private Long id;
 
 	private String firstName;
 	
@@ -21,7 +21,13 @@ public class ContactSearchCriteria  implements Serializable{
 	
 	private String email;
 	
-	private List<Long> groupIds = new ArrayList<>();
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getFirstName() {
 		return firstName;
@@ -47,12 +53,4 @@ public class ContactSearchCriteria  implements Serializable{
 		this.email = email;
 	}
 
-	public List<Long> getGroupIds() {
-		return groupIds;
-	}
-
-	public void setGroupIds(List<Long> groupIds) {
-		this.groupIds = groupIds;
-	}
-	
 }

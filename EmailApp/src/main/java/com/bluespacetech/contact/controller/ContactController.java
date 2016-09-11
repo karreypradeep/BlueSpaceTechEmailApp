@@ -58,8 +58,7 @@ public class ContactController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Void> update(@PathVariable final Long id, @RequestBody final Contact contact)
-			throws BusinessException {
+	public ResponseEntity<Void> update(@PathVariable final Long id, @RequestBody final Contact contact) throws BusinessException {
 
 		// Get existing Financial Year
 		final Contact currentContact = contactService.getContactById(id);
@@ -118,8 +117,7 @@ public class ContactController {
 	 * @return
 	 */
 	@RequestMapping(value = "/searchCriteria", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<Contact>> getContactsBySearchCriteria(
-			@RequestBody final ContactSearchCriteria contactSearchCriteria) {
+	public ResponseEntity<List<Contact>> getContactsBySearchCriteria(@RequestBody final ContactSearchCriteria contactSearchCriteria) {
 		if (contactSearchCriteria.getFirstName() != null) {
 			contactSearchCriteria.setFirstName(contactSearchCriteria.getFirstName().trim());
 			if (contactSearchCriteria.getFirstName().trim().equals("")) {
@@ -175,7 +173,7 @@ public class ContactController {
 	public ResponseEntity<Void> createContacts() throws BusinessException {
 
 		final ArrayList<Contact> contacts = new ArrayList<Contact>();
-		for (Long i = 0L; i < 500000L; i++) {
+		for (Long i = 0L; i < 5000L; i++) {
 			final Contact contact1 = new Contact();
 			contact1.setFirstName("contact" + i);
 			contact1.setLastName("lastname" + i);
@@ -192,7 +190,7 @@ public class ContactController {
 			contact1.getContactGroups().add(contactGroup1);
 
 			contacts.add(contact1);
-			if (i % 10000 == 0) {
+			if (i % 1000 == 0) {
 				contactRepository.save(contacts);
 				contacts.clear();
 			}

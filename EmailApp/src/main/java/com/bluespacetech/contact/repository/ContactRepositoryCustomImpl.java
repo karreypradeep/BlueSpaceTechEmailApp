@@ -28,13 +28,8 @@ public class ContactRepositoryCustomImpl implements ContactRepositoryCustom {
 
 	@Override
 	public List<Contact> findContactsBySearchCriteria(ContactSearchCriteria contactSearchCriteria) {
-		StringBuilder queryString = new StringBuilder("select DISTINCT C from Contact C, Group G, ContactGroup CG ");
+		StringBuilder queryString = new StringBuilder("select DISTINCT C from Contact C JOIN C.contactGroups CG ");
 		boolean whereClasuseAdded = false;
-		/*
-		 * if (contactSearchCriteria != null) { queryString = queryString
-		 * .append(" where C.id = CG.contactGroupPK.contact.id and G.id = CG.contactGroupPK.group.id "
-		 * ); }
-		 */
 		if (contactSearchCriteria.getFirstName() != null) {
 			if (!whereClasuseAdded) {
 				queryString = queryString.append(" where ");
@@ -59,15 +54,19 @@ public class ContactRepositoryCustomImpl implements ContactRepositoryCustom {
 			}
 			queryString = queryString.append(" C.email like :email ");
 		}
-		if (contactSearchCriteria.getGroupNames() != null && contactSearchCriteria.getGroupNames().size() > 0) {
+		if (contactSearchCriteria.getGroupIds() != null && contactSearchCriteria.getGroupIds().size() > 0) {
 			if (!whereClasuseAdded) {
 				queryString = queryString.append(" where ");
 			} else {
 				queryString = queryString.append(" and ");
 			}
-			queryString = queryString.append(" G.name in :groupNames ");
+			queryString = queryString.append(" CG.contactGroupPK.group.id in :groupIds ");
 		}
-		TypedQuery<Contact> query = entityManager.createQuery(queryString.toString(), Contact.class).setMaxResults(100);
+		//int pageNumber = 1;
+		//int pageSize = 100;
+		TypedQuery<Contact> query = entityManager.createQuery(queryString.toString(), Contact.class);
+		/*query.setFirstResult((pageNumber - 1) * pageSize);
+		query.setMaxResults(pageSize);*/
 		if (contactSearchCriteria.getFirstName() != null) {
 			query.setParameter("firstName", "%" + contactSearchCriteria.getFirstName() + "%");
 		}
@@ -77,10 +76,11 @@ public class ContactRepositoryCustomImpl implements ContactRepositoryCustom {
 		if (contactSearchCriteria.getEmail() != null) {
 			query.setParameter("email", contactSearchCriteria.getEmail());
 		}
-		if (contactSearchCriteria.getGroupNames() != null && contactSearchCriteria.getGroupNames().size() > 0) {
-			query.setParameter("groupNames", contactSearchCriteria.getGroupNames());
+		if (contactSearchCriteria.getGroupIds() != null && contactSearchCriteria.getGroupIds().size() > 0) {
+			query.setParameter("groupIds", contactSearchCriteria.getGroupIds());
 		}
-		return query.getResultList();
+		 List<Contact> contacts = query.getResultList();
+		return contacts;
 	}
 
 }
