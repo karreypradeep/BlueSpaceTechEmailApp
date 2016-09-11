@@ -4,6 +4,7 @@
  */
 package com.bluespacetech.contact.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import com.bluespacetech.contact.searchcriteria.ContactSearchCriteria;
 import com.bluespacetech.contact.service.ContactService;
 import com.bluespacetech.contactgroup.entity.ContactGroup;
 import com.bluespacetech.core.exceptions.BusinessException;
+import com.bluespacetech.group.entity.Group;
 import com.bluespacetech.group.service.GroupService;
 
 /**
@@ -138,8 +140,18 @@ public class ContactController {
 		}
 		final List<Contact> contacts = contactService.findBySearchCriteria(contactSearchCriteria);
 		for (final Contact contact : contacts) {
+			contact.setCreationDate(null);
+			contact.setLastUpdatedDate(null);
+			contact.setCreatedUser(null);
+			contact.setLastUpdatedUser(null);
+			contact.setResourceObjectId(null);
 			for (final ContactGroup contactGroup : contact.getContactGroups()) {
 				contactGroup.setContact(null);
+				contactGroup.getGroup().setCreatedUser(null);
+				contactGroup.getGroup().setLastUpdatedDate(null);
+				contactGroup.getGroup().setCreatedUser(null);
+				contactGroup.getGroup().setLastUpdatedUser(null);
+				contactGroup.getGroup().setComments(null);
 			}
 		}
 		return new ResponseEntity<List<Contact>>(contacts, HttpStatus.OK);
@@ -157,29 +169,36 @@ public class ContactController {
 		return new ResponseEntity<String>(String.format("{\"reason\":\"%s\"}", e.getMessage()), HttpStatus.NOT_FOUND);
 	}
 
-	/*
-	 * @ResponseStatus(HttpStatus.NO_CONTENT)
-	 * 
-	 * @RequestMapping(value = "/createContacts", method = RequestMethod.GET)
-	 * public ResponseEntity<Void> createContacts() throws BusinessException {
-	 * 
-	 * final ArrayList<Contact> contacts = new ArrayList<Contact>(); for (Long i
-	 * = 0L; i < 500000L; i++) { final Contact contact1 = new Contact();
-	 * contact1.setFirstName("contact" + i); contact1.setLastName("lastname" +
-	 * i); contact1.setEmail("kpgoud533@gmail.com");
-	 * 
-	 * final Group group1 = groupService.getGroupById(1L);
-	 * 
-	 * final ContactGroup contactGroup1 = new ContactGroup();
-	 * contactGroup1.setContact(contact1); contactGroup1.setGroup(group1);
-	 * contactGroup1.setActive(true); contactGroup1.setUnSubscribed(false);
-	 * 
-	 * contact1.getContactGroups().add(contactGroup1);
-	 * 
-	 * contacts.add(contact1); if (i % 10000 == 0) {
-	 * contactRepository.save(contacts); contacts.clear(); }
-	 * 
-	 * } return new ResponseEntity<Void>(HttpStatus.OK); }
-	 */
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+
+	@RequestMapping(value = "/createContacts", method = RequestMethod.GET)
+	public ResponseEntity<Void> createContacts() throws BusinessException {
+
+		final ArrayList<Contact> contacts = new ArrayList<Contact>();
+		for (Long i = 0L; i < 500000L; i++) {
+			final Contact contact1 = new Contact();
+			contact1.setFirstName("contact" + i);
+			contact1.setLastName("lastname" + i);
+			contact1.setEmail("kpgoud533@gmail.com");
+
+			final Group group1 = groupService.getGroupById(1L);
+
+			final ContactGroup contactGroup1 = new ContactGroup();
+			contactGroup1.setContact(contact1);
+			contactGroup1.setGroup(group1);
+			contactGroup1.setActive(true);
+			contactGroup1.setUnSubscribed(false);
+
+			contact1.getContactGroups().add(contactGroup1);
+
+			contacts.add(contact1);
+			if (i % 10000 == 0) {
+				contactRepository.save(contacts);
+				contacts.clear();
+			}
+
+		}
+		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
 
 }

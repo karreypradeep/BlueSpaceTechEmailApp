@@ -67,7 +67,7 @@ public class ContactRepositoryCustomImpl implements ContactRepositoryCustom {
 			}
 			queryString = queryString.append(" G.name in :groupNames ");
 		}
-		TypedQuery<Contact> query = entityManager.createQuery(queryString.toString(), Contact.class);
+		TypedQuery<Contact> query = entityManager.createQuery(queryString.toString(), Contact.class).setMaxResults(100);
 		if (contactSearchCriteria.getFirstName() != null) {
 			query.setParameter("firstName", "%" + contactSearchCriteria.getFirstName() + "%");
 		}
