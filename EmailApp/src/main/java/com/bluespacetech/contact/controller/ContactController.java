@@ -91,11 +91,10 @@ public class ContactController {
 		if (contact == null) {
 			throw new BusinessException("Supplied Contact ID is invalid.");
 		}
-		for (final ContactGroup contactGroup : contact.getContactGroups()) {
+		contact.getContactGroups().stream().forEach(contactGroup -> {
 			contactGroup.setContact(null);
-		}
+		});
 		return new ResponseEntity<Contact>(contact, HttpStatus.OK);
-
 	}
 
 	/**
@@ -106,11 +105,11 @@ public class ContactController {
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Contact>> getContacts() {
 		final List<Contact> contacts = contactService.findAll();
-		for (final Contact contact : contacts) {
-			for (final ContactGroup contactGroup : contact.getContactGroups()) {
+		contacts.stream().forEach(contact -> {
+			contact.getContactGroups().stream().forEach(contactGroup -> {
 				contactGroup.setContact(null);
-			}
-		}
+			});
+		});
 		return new ResponseEntity<List<Contact>>(contacts, HttpStatus.OK);
 	}
 
@@ -140,21 +139,21 @@ public class ContactController {
 			}
 		}
 		final List<Contact> contacts = contactService.findBySearchCriteria(contactSearchCriteria);
-		for (final Contact contact : contacts) {
+		contacts.stream().forEach(contact -> {
 			contact.setCreationDate(null);
 			contact.setLastUpdatedDate(null);
 			contact.setCreatedUser(null);
 			contact.setLastUpdatedUser(null);
 			contact.setResourceObjectId(null);
-			for (final ContactGroup contactGroup : contact.getContactGroups()) {
+			contact.getContactGroups().stream().forEach(contactGroup -> {
 				contactGroup.setContact(null);
 				contactGroup.getGroup().setCreatedUser(null);
 				contactGroup.getGroup().setLastUpdatedDate(null);
 				contactGroup.getGroup().setCreatedUser(null);
 				contactGroup.getGroup().setLastUpdatedUser(null);
 				contactGroup.getGroup().setComments(null);
-			}
-		}
+			});
+		});
 		return new ResponseEntity<List<Contact>>(contacts, HttpStatus.OK);
 	}
 

@@ -70,9 +70,6 @@ public class GroupController {
 			}
 		}
 		final List<Group> groups = groupService.findBySearchCriteria(groupSearchCriteria);
-		for (Group group : groups) {
-			group.setContactCount(group.getContactGroups().size());
-		}
 		return new ResponseEntity<List<Group>>(groups, HttpStatus.OK);
 	}
 
@@ -101,7 +98,7 @@ public class GroupController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Void> update(@PathVariable final Long id, @RequestBody final Group group) throws BusinessException {
+	public ResponseEntity<Group> update(@PathVariable final Long id, @RequestBody final Group group) throws BusinessException {
 
 		// Get existing Financial Year
 		final Group currentGroup = groupService.getGroupById(id);
@@ -112,8 +109,8 @@ public class GroupController {
 			throw new BusinessException("Stale Group. Please update.");
 		}
 
-		groupService.updateGroup(group);
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		Group groupUpdated = groupService.updateGroup(group);
+		return new ResponseEntity<Group>(groupUpdated, HttpStatus.OK);
 	}
 
 	@ResponseStatus(HttpStatus.NO_CONTENT)
