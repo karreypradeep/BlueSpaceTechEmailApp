@@ -16,7 +16,7 @@ require('rxjs/add/operator/map');
 var GroupService = (function () {
     function GroupService(http) {
         this.http = http;
-        this.groupUrl = "/groups";
+        this.groupUrl = "http://localhost:8080/groups";
     }
     GroupService.prototype.getAllGroups = function () {
         return this.http.get(this.groupUrl)
@@ -41,7 +41,7 @@ var GroupService = (function () {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
         return this.http.put(this.groupUrl + "/" + group.id, JSON.stringify(group), { headers: headers })
-            .map(function (res) { return; })
+            .map(function (res) { return res.json(); })
             .catch(this.handleError);
     };
     GroupService.prototype.deleteGroup = function (objectId) {

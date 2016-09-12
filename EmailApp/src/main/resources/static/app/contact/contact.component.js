@@ -27,10 +27,23 @@ var ContactComponent = (function () {
     ContactComponent.prototype.ngOnInit = function () {
         this.commonService.getAllGroups();
     };
+    ContactComponent.prototype.onSelectItemChange = function () {
+        var _this = this;
+        this.active = false;
+        setTimeout(function () { return _this.active = true; }, 0);
+        if (this.commonService.contactSearchCriteria.groupIds !== undefined && this.commonService.contactSearchCriteria.groupIds.length <= 0) {
+            this.commonService.contactSearchCriteria.groupIds = undefined;
+        }
+    };
     ContactComponent.prototype.onRowSelect = function (event) {
+        var _this = this;
         this.contactSelected = event.data;
-        this.displayViewDialog = true;
-        this.updateContact = false;
+        this.contactService.getContactById(this.contactSelected.id)
+            .subscribe(function (contactFromDB) {
+            _this.contactSelected = contactFromDB;
+            _this.displayViewDialog = true;
+            _this.updateContact = false;
+        });
     };
     ContactComponent.prototype.viewDialogCancelClick = function () {
         this.displayViewDialog = false;
@@ -62,7 +75,8 @@ var ContactComponent = (function () {
         }
         this.contactService.createContact(this.contactNew)
             .subscribe(function () {
-            _this.commonService.getAllContactsBySearchCriteria();
+            //this.commonService.getAllContactsBySearchCriteria();
+            _this.commonService.resetContactsBySearchCriteria();
             _this.commonService.groups = [];
             _this.displayCreateDialog = false;
             _this.msgs.push({ severity: "info", summary: "Contact created successfully.", detail: "" });
@@ -115,8 +129,10 @@ var ContactComponent = (function () {
             this.contactSelected.contactGroups.push(contactGroup);
         }
         this.contactService.updateContact(this.contactSelected)
-            .subscribe(function () {
-            _this.commonService.getAllContactsBySearchCriteria();
+            .subscribe(function (contactUpdated) {
+            _this.contactSelected = contactUpdated;
+            //this.commonService.getAllContactsBySearchCriteria();
+            _this.commonService.resetContactsBySearchCriteria();
             _this.commonService.groups = [];
             _this.displayViewDialog = true;
             _this.updateContact = false;
@@ -134,7 +150,8 @@ var ContactComponent = (function () {
         this.msgs = [];
         this.contactService.deleteContact(this.contactSelected.id)
             .subscribe(function () {
-            _this.commonService.getAllContactsBySearchCriteria();
+            //this.commonService.getAllContactsBySearchCriteria();
+            _this.commonService.resetContactsBySearchCriteria();
             _this.commonService.groups = [];
             _this.msgs.push({ severity: "info", summary: "Contact deleted successfully.", detail: "" });
             _this.displayViewDialog = false;

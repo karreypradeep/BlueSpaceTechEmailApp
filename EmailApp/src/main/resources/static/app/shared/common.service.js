@@ -20,6 +20,14 @@ var CommonService = (function () {
         this.contactSearchCriteria = new contact_search_criteria_1.ContactSearchCriteria();
         this.groupSearchCriteria = new group_search_criteria_1.GroupSearchCriteria();
     }
+    CommonService.prototype.resetContactsBySearchCriteria = function () {
+        this.contacts = [];
+        this.contactSearchCriteria = new contact_search_criteria_1.ContactSearchCriteria();
+    };
+    CommonService.prototype.resetGroupsBySearchCriteria = function () {
+        this.groups = [];
+        this.groupSearchCriteria = new group_search_criteria_1.GroupSearchCriteria();
+    };
     CommonService.prototype.getAllContacts = function () {
         var _this = this;
         this.contactService.getAllContacts()
@@ -67,7 +75,7 @@ var CommonService = (function () {
             for (var _i = 0, groups_1 = groups; _i < groups_1.length; _i++) {
                 var group = groups_1[_i];
                 _this.groupItems.push({ label: group.name, value: group });
-                _this.groupNamesForSearch.push({ label: group.name, value: group.name });
+                _this.groupNamesForSearch.push({ label: group.name, value: group.id });
             }
         });
     };

@@ -16,13 +16,18 @@ require('rxjs/add/operator/map');
 var ContactService = (function () {
     function ContactService(http) {
         this.http = http;
-        this.contactUrl = "/contacts";
+        this.contactUrl = "http://localhost:8080/contacts";
     }
     ContactService.prototype.createContact = function (contact) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
         return this.http.post(this.contactUrl, JSON.stringify(contact), { headers: headers })
             .map(function (res) { return; })
+            .catch(this.handleError);
+    };
+    ContactService.prototype.getContactById = function (id) {
+        return this.http.get(this.contactUrl + "/" + id)
+            .map(function (res) { return res.json(); })
             .catch(this.handleError);
     };
     ContactService.prototype.getAllContactsByCriteria = function (contactSearchCriteria) {
@@ -41,7 +46,7 @@ var ContactService = (function () {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
         return this.http.put(this.contactUrl + "/" + contact.id, JSON.stringify(contact), { headers: headers })
-            .map(function (res) { return; })
+            .map(function (res) { return res.json(); })
             .catch(this.handleError);
     };
     ContactService.prototype.deleteContact = function (objectId) {

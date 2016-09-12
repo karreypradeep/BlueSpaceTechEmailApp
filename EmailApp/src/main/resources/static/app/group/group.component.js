@@ -43,7 +43,8 @@ var GroupComponent = (function () {
         this.msgs = [];
         this.groupService.createGroup(this.groupNew)
             .subscribe(function () {
-            _this.commonService.searchGroupsByCriteria();
+            //this.commonService.searchGroupsByCriteria();
+            _this.commonService.resetGroupsBySearchCriteria();
             _this.displayCreateDialog = false;
             _this.commonService.getAllGroups();
             _this.commonService.contacts = [];
@@ -62,7 +63,8 @@ var GroupComponent = (function () {
         this.msgs = [];
         this.groupService.deleteGroup(this.groupSelected.id)
             .subscribe(function () {
-            _this.commonService.searchGroupsByCriteria();
+            //this.commonService.searchGroupsByCriteria();
+            _this.commonService.resetGroupsBySearchCriteria();
             _this.msgs.push({ severity: "info", summary: "Group deleted successfully.", detail: "" });
             _this.displayViewDialog = false;
             _this.commonService.contacts = [];
@@ -74,8 +76,10 @@ var GroupComponent = (function () {
         var _this = this;
         this.msgs = [];
         this.groupService.updateGroup(this.groupSelected)
-            .subscribe(function () {
-            _this.commonService.searchGroupsByCriteria();
+            .subscribe(function (groupUpdated) {
+            _this.groupSelected = groupUpdated;
+            //this.commonService.searchGroupsByCriteria();
+            _this.commonService.resetGroupsBySearchCriteria();
             _this.displayViewDialog = true;
             _this.updateGroup = false;
             _this.commonService.contacts = [];
