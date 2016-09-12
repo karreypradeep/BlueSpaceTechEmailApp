@@ -73,8 +73,7 @@ public class ContactServiceImpl implements ContactService {
 	// ((hasAuthority('ACC_TYPE_ADMIN') or hasAuthority('ACC_TYPE_EMPLOYEE'))
 	// and (hasAuthority('ACCESS_PERSON')))")
 	public Contact getContactById(final Long contactId) {
-		final Contact contact = contactRepository.findOne(contactId);
-		return contact;
+		return contactRepository.findOne(contactId);
 	}
 
 	@Override

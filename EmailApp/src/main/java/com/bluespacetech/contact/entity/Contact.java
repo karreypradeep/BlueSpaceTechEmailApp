@@ -11,7 +11,6 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -39,7 +38,7 @@ public class Contact extends BaseEntity implements Serializable {
 	@Column(name = "EMAIL")
 	private String email;
 
-	@OneToMany(mappedBy = "contactGroupPK.contact", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "contactGroupPK.contact", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ContactGroup> contactGroups = new ArrayList<>();
 
 	public List<ContactGroup> getContactGroups() {

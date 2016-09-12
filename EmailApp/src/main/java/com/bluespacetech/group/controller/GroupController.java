@@ -46,9 +46,7 @@ public class GroupController {
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Group>> getGroups() {
 		final List<Group> groups = groupService.findAll();
-		for (Group group : groups) {
-			group.setContactCount(group.getContactGroups().size());
-		}
+		//groups.parallelStream().forEach(group -> group.setContactCount(group.getContactGroups().size()));
 		return new ResponseEntity<List<Group>>(groups, HttpStatus.OK);
 	}
 
@@ -103,8 +101,7 @@ public class GroupController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Void> update(@PathVariable final Long id, @RequestBody final Group group)
-			throws BusinessException {
+	public ResponseEntity<Void> update(@PathVariable final Long id, @RequestBody final Group group) throws BusinessException {
 
 		// Get existing Financial Year
 		final Group currentGroup = groupService.getGroupById(id);

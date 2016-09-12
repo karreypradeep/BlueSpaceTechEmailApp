@@ -91,6 +91,9 @@ public class ContactController {
 		if (contact == null) {
 			throw new BusinessException("Supplied Contact ID is invalid.");
 		}
+		for (final ContactGroup contactGroup : contact.getContactGroups()) {
+			contactGroup.setContact(null);
+		}
 		return new ResponseEntity<Contact>(contact, HttpStatus.OK);
 
 	}
