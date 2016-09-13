@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+
+<head>
+
+  <base href="/">    
+  
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <app-root>Loading...</app-root>
+
+  <script src="vendor/es6-shim/es6-shim.js"></script>   <script src="vendor/reflect-metadata/Reflect.js"></script>   <script src="vendor/systemjs/dist/system.src.js"></script>   <script src="vendor/zone.js/dist/zone.js"></script> 
+  <script>
+      System.import('system-config.js').then(function () {
+        System.import('main');
+      }).catch(console.error.bind(console));
+  </script>
+
+  <!-- jQuery -->
+  <script src="app/resources/js/jquery.min.js"></script>
+
+  <script src="vendor/bootstrap-validator/dist/validator.js" type="text/javascript"></script>
+
+  <!-- Bootstrap Core JavaScript 
+  <script src="app/resources/js/bootstrap.min.js"></script>-->
+  <script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+
+  <!-- Metis Menu Plugin JavaScript -->
+  <script src="app/resources/js/metisMenu.min.js"></script>
+
+  <!-- Morris Charts JavaScript -->
+  <script src="app/resources/js/raphael.min.js"></script>
+  <script src="app/resources/js/morris.min.js"></script>
+
+  <!-- Custom Theme JavaScript -->
+  <script src="app/resources/js/sb-admin-2.js"></script>
+
+</body>
+
+</html>
