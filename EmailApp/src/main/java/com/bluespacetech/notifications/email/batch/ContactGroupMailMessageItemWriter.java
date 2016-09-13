@@ -98,6 +98,9 @@ public class ContactGroupMailMessageItemWriter implements ItemWriter<ContactGrou
 		} catch (final BusinessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (final Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
