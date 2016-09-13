@@ -16,7 +16,7 @@ require('rxjs/add/operator/map');
 var GroupService = (function () {
     function GroupService(http) {
         this.http = http;
-        this.groupUrl = "http://localhost:8080/groups";
+        this.groupUrl = "/groups";
     }
     GroupService.prototype.getAllGroups = function () {
         return this.http.get(this.groupUrl)

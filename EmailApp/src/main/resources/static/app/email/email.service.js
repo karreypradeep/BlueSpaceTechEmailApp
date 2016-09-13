@@ -14,7 +14,7 @@ var Observable_1 = require("rxjs/Observable");
 var EmailService = (function () {
     function EmailService(http) {
         this.http = http;
-        this.emailUrl = "http://localhost:8080/emails";
+        this.emailUrl = "/emails";
     }
     EmailService.prototype.sendEmail = function (emailVo) {
         var headers = new http_1.Headers();
