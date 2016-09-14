@@ -2,6 +2,7 @@ package com.bluespacetech.notifications.email.batch;
 
 import javax.sql.DataSource;
 
+import org.apache.velocity.app.VelocityEngine;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -15,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.mail.MailSender;
 import org.springframework.mail.javamail.JavaMailSender;
 
 import com.bluespacetech.notifications.email.service.EmailContactGroupService;
@@ -41,8 +41,11 @@ public class EmailBatchConfiguration {
 	@Autowired
 	public DataSource dataSource;
 
-	private static String QUERY_FIND_CONTACTS = "SELECT FIRST_NAME, LAST_NAME, EMAIL, GROUP_ID, CONTACT_ID FROM CONTACTS "
-			+ "C, CONTACT_GROUP CG WHERE CG.CONTACT_ID = C.ID AND CG.UNSUBSCRIBED = 0";
+	@Autowired
+	private VelocityEngine velocityEngine;
+
+	private static String QUERY_FIND_CONTACTS = "SELECT first_name, last_name, email, group_id, contact_id FROM contacts "
+			+ "C, contact_group CG WHERE CG.contact_id = C.ID AND CG.unsubscribed = 0";
 
 	@Bean
 	@StepScope
@@ -58,13 +61,13 @@ public class EmailBatchConfiguration {
 			emailContactGroupRowMapper.setEmailId(emailId);
 		}
 		databaseReader.setRowMapper(emailContactGroupRowMapper);
-		QUERY_FIND_CONTACTS = QUERY_FIND_CONTACTS + " AND CG.GROUP_ID = " + groupId;
+		QUERY_FIND_CONTACTS = QUERY_FIND_CONTACTS + " AND CG.group_id = " + groupId;
 		databaseReader.setSql(QUERY_FIND_CONTACTS);
 		return databaseReader;
 	}
 
 	@Bean
-	public ItemWriter<ContactGroupMailMessage> simpleEmailWriter(MailSender javaMailSender,
+	public ItemWriter<ContactGroupMailMessage> simpleEmailWriter(
 			final EmailContactGroupService emailContactGroupService) {
 		final ContactGroupMailMessageItemWriter writer = new ContactGroupMailMessageItemWriter();
 		writer.setMailSender(javaMailSender);
@@ -78,6 +81,8 @@ public class EmailBatchConfiguration {
 			@Value("#{jobParameters[emailRequestURL]}") String emailRequestURL) {
 		final GroupContactEmailItemProcessor processor = new GroupContactEmailItemProcessor();
 		processor.setEmailRequestURL(emailRequestURL);
+		processor.setMailSender(javaMailSender);
+		processor.setVelocityEngine(velocityEngine);
 		return processor;
 	}
 
@@ -92,7 +97,7 @@ public class EmailBatchConfiguration {
 		return stepBuilderFactory.get("step1").<EmailContactGroupVO, ContactGroupMailMessage> chunk(10000)
 				.reader(databaseItemReader(dataSource, null, null, null, null))
 				.processor(processor(null))
-				.writer(simpleEmailWriter(javaMailSender, emailContactGroupService)).build();
+				.writer(simpleEmailWriter(emailContactGroupService)).build();
 	}
 
 }

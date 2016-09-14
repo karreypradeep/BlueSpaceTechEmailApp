@@ -3,13 +3,14 @@ package com.bluespacetech.notifications.email.batch;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.mail.internet.MimeMessage;
+
 import org.apache.log4j.Logger;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSendException;
-import org.springframework.mail.MailSender;
-import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.util.Assert;
 
 import com.bluespacetech.core.exceptions.BusinessException;
@@ -21,20 +22,17 @@ public class ContactGroupMailMessageItemWriter implements ItemWriter<ContactGrou
 
 	Logger logger = Logger.getLogger(ContactGroupMailMessageItemWriter.class);
 
-	private MailSender mailSender;
+	private JavaMailSender mailSender;
 
 	private EmailContactGroupService emailContactGroupService;
-	// private MailSender mailSender;
-
-	// private MailErrorHandler mailErrorHandler = new
-	// DefaultMailErrorHandler();
 
 	/**
-	 * A {@link MailSender} to be used to send messages in {@link #write(List)}.
+	 * A {@link JavaMailSender} to be used to send messages in
+	 * {@link #write(List)}.
 	 * 
 	 * @param mailSender
 	 */
-	public void setMailSender(MailSender mailSender) {
+	public void setMailSender(JavaMailSender mailSender) {
 		this.mailSender = mailSender;
 	}
 
@@ -79,17 +77,17 @@ public class ContactGroupMailMessageItemWriter implements ItemWriter<ContactGrou
 	@Override
 	public void write(List<? extends ContactGroupMailMessage> items) throws MailException {
 		try {
-			final SimpleMailMessage[] messages = new SimpleMailMessage[items.size()];
+			final MimeMessage[] messages = new MimeMessage[items.size()];
 			final List<EmailContactGroup> emailContactGroups = new ArrayList<EmailContactGroup>();
 			int count = 0;
 			for (final ContactGroupMailMessage contactGroupMailMessage : items) {
-				messages[count] = contactGroupMailMessage.getSimpleMailMessage();
+				messages[count] = contactGroupMailMessage.getMimeMessage();
 				emailContactGroups.add(contactGroupMailMessage.getEmailContactGroup());
 				count++;
 			}
 			emailContactGroupService.createEmailContactGroups(emailContactGroups);
 			mailSender.send(messages);
-			throw new Exception();
+			// throw new Exception();
 		} catch (final MailSendException e) {
 			logger.error(e.getMessage());
 		} catch (final BusinessException e) {

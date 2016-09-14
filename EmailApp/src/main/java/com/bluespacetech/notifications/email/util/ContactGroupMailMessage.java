@@ -2,7 +2,7 @@ package com.bluespacetech.notifications.email.util;
 
 import java.io.Serializable;
 
-import org.springframework.mail.SimpleMailMessage;
+import javax.mail.internet.MimeMessage;
 
 import com.bluespacetech.notifications.email.entity.EmailContactGroup;
 
@@ -15,7 +15,22 @@ public class ContactGroupMailMessage implements Serializable {
 
 	private EmailContactGroup emailContactGroup;
 
-	private SimpleMailMessage simpleMailMessage;
+	private MimeMessage mimeMessage;
+
+	/**
+	 * @return the mimeMessage
+	 */
+	public MimeMessage getMimeMessage() {
+		return mimeMessage;
+	}
+
+	/**
+	 * @param mimeMessage
+	 *            the mimeMessage to set
+	 */
+	public void setMimeMessage(MimeMessage mimeMessage) {
+		this.mimeMessage = mimeMessage;
+	}
 
 	/**
 	 * @return the emailContactGroup
@@ -32,19 +47,6 @@ public class ContactGroupMailMessage implements Serializable {
 		this.emailContactGroup = emailContactGroup;
 	}
 
-	/**
-	 * @return the simpleMailMessage
-	 */
-	public SimpleMailMessage getSimpleMailMessage() {
-		return simpleMailMessage;
-	}
 
-	/**
-	 * @param simpleMailMessage
-	 *            the simpleMailMessage to set
-	 */
-	public void setSimpleMailMessage(SimpleMailMessage simpleMailMessage) {
-		this.simpleMailMessage = simpleMailMessage;
-	}
 
 }

@@ -1,9 +1,18 @@
 package com.bluespacetech.notifications.email.batch;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
+import javax.mail.internet.MimeMessage;
+
+import org.apache.log4j.Logger;
+import org.apache.velocity.app.VelocityEngine;
 import org.springframework.batch.item.ItemProcessor;
-import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import com.bluespacetech.notifications.email.entity.EmailContactGroup;
 import com.bluespacetech.notifications.email.util.ContactGroupMailMessage;
@@ -18,21 +27,33 @@ public class GroupContactEmailItemProcessor implements ItemProcessor<EmailContac
 
 	private String emailRequestURL;
 
+	Logger logger = Logger.getLogger(ContactGroupMailMessageItemWriter.class);
+
+	private JavaMailSender mailSender;
+
+	private VelocityEngine velocityEngine;
+
 	@Override
 	public ContactGroupMailMessage process(final EmailContactGroupVO emailContactGroupVO) throws Exception {
-		final StringBuffer emailMessage = new StringBuffer(emailContactGroupVO.getMessage());
 		final String unscribeLink = EmailUtils.generateUnscribeLink(emailContactGroupVO, emailRequestURL);
-		emailMessage.append(System.lineSeparator());
-		emailMessage.append(unscribeLink);
+		final Map<String, Object> model = new HashMap<String, Object>();
+		model.put("userName", emailContactGroupVO.getContactFirstName());
+		model.put("emailText", emailContactGroupVO.getMessage());
+		model.put("unsubscribe", unscribeLink);
+		final String text = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine,
+				"velocityTemplates/SimpleEmail.vm", model);
 
 		final ContactGroupMailMessage contactGroupMailMessage = new ContactGroupMailMessage();
-		final SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+		final MimeMessage mimeMessage = mailSender.createMimeMessage();
+		final MimeMessageHelper simpleMailMessage = new MimeMessageHelper(mimeMessage, true);
 		simpleMailMessage.setTo(emailContactGroupVO.getContactEmail());
-		simpleMailMessage.setFrom(emailContactGroupVO.getFromAddress());
+		if(mailSender instanceof JavaMailSenderImpl){
+			simpleMailMessage.setFrom(((JavaMailSenderImpl) mailSender).getUsername());
+		}
+
 		simpleMailMessage.setSubject(emailContactGroupVO.getSubject());
 		simpleMailMessage.setSentDate(new Date());
-		simpleMailMessage.setText(emailMessage.toString());
-
+		simpleMailMessage.setText(text, true);
 
 		final EmailContactGroup emailContactGroup = new EmailContactGroup();
 		emailContactGroup.setContactId(emailContactGroupVO.getContactId());
@@ -40,20 +61,13 @@ public class GroupContactEmailItemProcessor implements ItemProcessor<EmailContac
 		if (emailContactGroupVO.getEmailId() != null) {
 			emailContactGroup.setEmailId(emailContactGroupVO.getEmailId());
 		} else {
-			emailContactGroup.setMessage(emailMessage.toString());
+			emailContactGroup.setMessage(text);
 			emailContactGroup.setSubject(emailContactGroupVO.getSubject());
 		}
 
 		contactGroupMailMessage.setEmailContactGroup(emailContactGroup);
-		contactGroupMailMessage.setSimpleMailMessage(simpleMailMessage);
+		contactGroupMailMessage.setMimeMessage(mimeMessage);
 		return contactGroupMailMessage;
-	}
-
-	/**
-	 * @return the emailRequestURL
-	 */
-	public String getEmailRequestURL() {
-		return emailRequestURL;
 	}
 
 	/**
@@ -62,6 +76,18 @@ public class GroupContactEmailItemProcessor implements ItemProcessor<EmailContac
 	 */
 	public void setEmailRequestURL(String emailRequestURL) {
 		this.emailRequestURL = emailRequestURL;
+	}
+
+	/**
+	 * @param mailSender
+	 *            the mailSender to set
+	 */
+	public void setMailSender(JavaMailSender mailSender) {
+		this.mailSender = mailSender;
+	}
+
+	public void setVelocityEngine(VelocityEngine velocityEngine) {
+		this.velocityEngine = velocityEngine;
 	}
 
 }

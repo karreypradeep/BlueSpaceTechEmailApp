@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.mail.MailSender;
 import org.springframework.mail.javamail.JavaMailSender;
 
 import com.bluespacetech.notifications.email.service.EmailContactGroupService;
@@ -64,7 +63,7 @@ public class ContactGroupEmailBatchConfiguration {
 	}
 
 	@Bean
-	public ItemWriter<ContactGroupMailMessage> simpleEmailWriter(MailSender javaMailSender,
+	public ItemWriter<ContactGroupMailMessage> simpleEmailWriter(
 			final EmailContactGroupService emailContactGroupService) {
 		final ContactGroupMailMessageItemWriter writer = new ContactGroupMailMessageItemWriter();
 		writer.setMailSender(javaMailSender);
@@ -78,6 +77,7 @@ public class ContactGroupEmailBatchConfiguration {
 			@Value("#{jobParameters[emailRequestURL]}") String emailRequestURL) {
 		final GroupContactEmailItemProcessor processor = new GroupContactEmailItemProcessor();
 		processor.setEmailRequestURL(emailRequestURL);
+		processor.setMailSender(javaMailSender);
 		return processor;
 	}
 
@@ -92,7 +92,7 @@ public class ContactGroupEmailBatchConfiguration {
 		return stepBuilderFactory.get("step1").<EmailContactGroupVO, ContactGroupMailMessage> chunk(10)
 				.reader(databaseItemReader(dataSource, null, null, null, null))
 				.processor(processor(null))
-				.writer(simpleEmailWriter(javaMailSender, emailContactGroupService)).build();
+				.writer(simpleEmailWriter(emailContactGroupService)).build();
 	}
 
 }
