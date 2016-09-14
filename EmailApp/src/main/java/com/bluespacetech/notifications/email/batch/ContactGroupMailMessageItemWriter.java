@@ -3,6 +3,7 @@ package com.bluespacetech.notifications.email.batch;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.mail.MailException;
@@ -17,6 +18,8 @@ import com.bluespacetech.notifications.email.service.EmailContactGroupService;
 import com.bluespacetech.notifications.email.util.ContactGroupMailMessage;
 
 public class ContactGroupMailMessageItemWriter implements ItemWriter<ContactGroupMailMessage>, InitializingBean {
+
+	Logger logger = Logger.getLogger(ContactGroupMailMessageItemWriter.class);
 
 	private MailSender mailSender;
 
@@ -86,21 +89,13 @@ public class ContactGroupMailMessageItemWriter implements ItemWriter<ContactGrou
 			}
 			emailContactGroupService.createEmailContactGroups(emailContactGroups);
 			mailSender.send(messages);
+			throw new Exception();
 		} catch (final MailSendException e) {
-			System.out.println(e);
-			/*
-			 * final Map<Object, Exception> failedMessages =
-			 * e.getFailedMessages(); for (final Entry<Object, Exception> entry
-			 * : failedMessages.entrySet()) {
-			 * mailErrorHandler.handle((SimpleMailMessage) entry.getKey(),
-			 * entry.getValue()); }
-			 */
+			logger.error(e.getMessage());
 		} catch (final BusinessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		} catch (final Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 	}
 

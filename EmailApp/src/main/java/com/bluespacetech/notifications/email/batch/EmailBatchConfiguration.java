@@ -58,8 +58,8 @@ public class EmailBatchConfiguration {
 			emailContactGroupRowMapper.setEmailId(emailId);
 		}
 		databaseReader.setRowMapper(emailContactGroupRowMapper);
-		databaseReader.setSql(QUERY_FIND_CONTACTS);
 		QUERY_FIND_CONTACTS = QUERY_FIND_CONTACTS + " AND CG.GROUP_ID = " + groupId;
+		databaseReader.setSql(QUERY_FIND_CONTACTS);
 		return databaseReader;
 	}
 
