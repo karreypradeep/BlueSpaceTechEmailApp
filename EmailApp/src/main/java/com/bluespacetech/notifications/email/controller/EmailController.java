@@ -31,6 +31,8 @@ import com.bluespacetech.contact.service.ContactService;
 import com.bluespacetech.contactgroup.service.ContactGroupService;
 import com.bluespacetech.core.exceptions.BusinessException;
 import com.bluespacetech.notifications.email.entity.Email;
+import com.bluespacetech.notifications.email.entity.EmailContactGroup;
+import com.bluespacetech.notifications.email.service.EmailContactGroupService;
 import com.bluespacetech.notifications.email.service.EmailService;
 import com.bluespacetech.notifications.email.valueobjects.EmailVO;
 
@@ -53,6 +55,9 @@ public class EmailController {
 
 	@Autowired
 	private ContactGroupService contactGroupService;
+
+	@Autowired
+	private EmailContactGroupService emailContactGroupService;
 
 	@Autowired
 	@Qualifier("groupEmailJob")
@@ -139,6 +144,28 @@ public class EmailController {
 
 	}
 
+	@RequestMapping(value = "/readMail", method = RequestMethod.GET)
+	public void readMail(HttpServletRequest request) throws BusinessException {
+		final String reqContactId = request.getParameter("contactId");
+		final String reqGroupId = request.getParameter("groupId");
+		final String reqEmailRandomNumber = request.getParameter("emailRandomNumber");
+
+		Long groupId, contactId,emailRandomNumber = null;
+		contactId = Long.valueOf(reqContactId);
+		groupId = Long.valueOf(reqGroupId);
+		emailRandomNumber = Long.valueOf(reqEmailRandomNumber);
+		if (contactId != null && groupId != null) {
+			final EmailContactGroup emailContactGroup = emailContactGroupService
+					.findByContactIdAndGroupIdAndRandomNumber(contactId, groupId, emailRandomNumber);
+			if (emailContactGroup != null) {
+				Integer readCount = emailContactGroup.getReadCount();
+				readCount = readCount != null ? ++readCount : 1;
+				emailContactGroup.setReadCount(readCount);
+				emailContactGroupService.updateEmailContactGroup(emailContactGroup);
+			}
+		}
+
+	}
 	@ExceptionHandler(BusinessException.class)
 	ResponseEntity<String> handleContactNotFoundException(final Exception e) {
 		return new ResponseEntity<String>(String.format("{\"reason\":\"%s\"}", e.getMessage()), HttpStatus.NOT_FOUND);

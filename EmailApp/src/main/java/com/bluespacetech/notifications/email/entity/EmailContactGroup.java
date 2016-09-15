@@ -39,6 +39,12 @@ public class EmailContactGroup extends BaseEntity implements Serializable {
 	@Column(name = "SUBJECT")
 	private String subject;
 
+	@Column(name = "RANDOM_NUMBER", nullable = false)
+	private Long randomNumber;
+
+	@Column(name = "READ_COUNT")
+	private Integer readCount;
+
 	/**
 	 * @return the emailId
 	 */
@@ -112,6 +118,36 @@ public class EmailContactGroup extends BaseEntity implements Serializable {
 	 */
 	public void setSubject(String subject) {
 		this.subject = subject;
+	}
+
+	/**
+	 * @return the randomNumber
+	 */
+	public Long getRandomNumber() {
+		return randomNumber;
+	}
+
+	/**
+	 * @param randomNumber
+	 *            the randomNumber to set
+	 */
+	public void setRandomNumber(Long randomNumber) {
+		this.randomNumber = randomNumber;
+	}
+
+	/**
+	 * @return the readCount
+	 */
+	public Integer getReadCount() {
+		return readCount;
+	}
+
+	/**
+	 * @param readCount
+	 *            the readCount to set
+	 */
+	public void setReadCount(Integer readCount) {
+		this.readCount = readCount;
 	}
 
 }

@@ -3,6 +3,7 @@ package com.bluespacetech.notifications.email.batch;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import javax.mail.internet.MimeMessage;
 
@@ -35,11 +36,17 @@ public class GroupContactEmailItemProcessor implements ItemProcessor<EmailContac
 
 	@Override
 	public ContactGroupMailMessage process(final EmailContactGroupVO emailContactGroupVO) throws Exception {
+		final Random randomno = new Random();
+		final long value = randomno.nextLong();
 		final String unscribeLink = EmailUtils.generateUnscribeLink(emailContactGroupVO, emailRequestURL);
+		final String readMailImageSRC = EmailUtils.generateReadMailImageSRC(emailContactGroupVO, emailRequestURL,
+				value);
+
 		final Map<String, Object> model = new HashMap<String, Object>();
 		model.put("userName", emailContactGroupVO.getContactFirstName());
 		model.put("emailText", emailContactGroupVO.getMessage());
 		model.put("unsubscribe", unscribeLink);
+		model.put("readMailImageSRC", readMailImageSRC);
 		final String text = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine,
 				"velocityTemplates/SimpleEmail.vm", model);
 
@@ -58,6 +65,8 @@ public class GroupContactEmailItemProcessor implements ItemProcessor<EmailContac
 		final EmailContactGroup emailContactGroup = new EmailContactGroup();
 		emailContactGroup.setContactId(emailContactGroupVO.getContactId());
 		emailContactGroup.setGroupId(emailContactGroupVO.getGroupId());
+		emailContactGroup.setRandomNumber(value);
+		emailContactGroup.setReadCount(0);
 		if (emailContactGroupVO.getEmailId() != null) {
 			emailContactGroup.setEmailId(emailContactGroupVO.getEmailId());
 		} else {

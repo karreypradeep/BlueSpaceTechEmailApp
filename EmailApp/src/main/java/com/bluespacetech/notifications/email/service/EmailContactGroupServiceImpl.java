@@ -63,5 +63,15 @@ public class EmailContactGroupServiceImpl implements EmailContactGroupService {
 		return emailContactGroupRepository.findAll();
 	}
 
+	@Override
+	public EmailContactGroup findByContactIdAndGroupIdAndRandomNumber(Long contactId, Long groupId, Long randomNumber) {
+		return emailContactGroupRepository.findByContactIdAndGroupIdAndRandomNumber(contactId, groupId, randomNumber);
+	}
+
+	@Override
+	public EmailContactGroup updateEmailContactGroup(EmailContactGroup emailContactGroup) throws BusinessException {
+		final EmailContactGroup newEmailContactGroup = emailContactGroupRepository.save(emailContactGroup);
+		return newEmailContactGroup;
+	}
 
 }

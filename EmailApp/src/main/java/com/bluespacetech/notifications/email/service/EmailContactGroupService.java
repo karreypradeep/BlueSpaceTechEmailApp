@@ -26,4 +26,9 @@ public interface EmailContactGroupService {
 
 	List<EmailContactGroup> findAll();
 
+	EmailContactGroup findByContactIdAndGroupIdAndRandomNumber(final Long contactId, final Long groupId,
+			final Long randomNumber);
+
+	EmailContactGroup updateEmailContactGroup(final EmailContactGroup emailContactGroup) throws BusinessException;
+
 }
