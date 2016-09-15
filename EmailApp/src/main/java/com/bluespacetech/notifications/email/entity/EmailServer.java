@@ -27,6 +27,10 @@ public class EmailServer extends BaseEntity implements Serializable {
 	 */
 	private static final long serialVersionUID = 4111075785941540894L;
 
+	@NotEmpty(message = "Name is mandatory.")
+	@Column(name = "NAME", unique = true)
+	private String name;
+
 	@NotEmpty(message = "Protocol is mandatory.")
 	@Column(name = "PROTOCOL")
 	private String protocol;
@@ -158,6 +162,21 @@ public class EmailServer extends BaseEntity implements Serializable {
 	 */
 	public void setMailsPerSession(Integer mailsPerSession) {
 		this.mailsPerSession = mailsPerSession;
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name
+	 *            the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

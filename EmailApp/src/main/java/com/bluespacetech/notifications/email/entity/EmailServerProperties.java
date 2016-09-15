@@ -43,7 +43,7 @@ public class EmailServerProperties extends BaseEntity implements Serializable {
 	@NotNull(message = "Email server mandatory.")
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "EMAIL_SERVER_ID", nullable = false)
-	private EmailServer EmailServer;
+	private EmailServer emailServer;
 
 	@NotNull(message = "Email server property value type is mandatory.")
 	@Basic
@@ -85,7 +85,7 @@ public class EmailServerProperties extends BaseEntity implements Serializable {
 	 * @return the emailServer
 	 */
 	public EmailServer getEmailServer() {
-		return EmailServer;
+		return emailServer;
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class EmailServerProperties extends BaseEntity implements Serializable {
 	 *            the emailServer to set
 	 */
 	public void setEmailServer(EmailServer emailServer) {
-		EmailServer = emailServer;
+		this.emailServer = emailServer;
 	}
 
 	/**
