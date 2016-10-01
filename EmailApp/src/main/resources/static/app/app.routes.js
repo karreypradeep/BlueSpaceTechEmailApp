@@ -3,6 +3,7 @@ var router_1 = require("@angular/router");
 var dashboard_component_1 = require("./dashboard/dashboard.component");
 var contact_component_1 = require("./contact/contact.component");
 var group_component_1 = require("./group/group.component");
+var emailserver_component_1 = require("./emailserver/emailserver.component");
 var routes = [
     {
         path: "",
@@ -19,6 +20,10 @@ var routes = [
     {
         path: "groups",
         component: group_component_1.GroupComponent
+    },
+    {
+        path: "servers",
+        component: emailserver_component_1.EmailServerComponent
     }
 ];
 exports.appRouterProviders = [

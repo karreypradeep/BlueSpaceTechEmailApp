@@ -52,12 +52,28 @@ public class EmailServer extends BaseEntity implements Serializable {
 	private String fromAddress;
 
 	@NotEmpty(message = "Host is mandatory.")
-	@Column(name = "USERNAME")
-	private String username;
+	@Column(name = "EMAIL_USERNAME")
+	private String emailUsername;
 
 	@NotEmpty(message = "Host is mandatory.")
-	@Column(name = "PASSWORD")
-	private String password;
+	@Column(name = "EMAIL_PASSWORD")
+	private String emailPassword;
+	
+	public String getEmailUsername() {
+		return emailUsername;
+	}
+
+	public void setEmailUsername(String emailUsername) {
+		this.emailUsername = emailUsername;
+	}
+
+	public String getEmailPassword() {
+		return emailPassword;
+	}
+
+	public void setEmailPassword(String emailPassword) {
+		this.emailPassword = emailPassword;
+	}
 
 	/**
 	 * @return the protocol
@@ -117,36 +133,6 @@ public class EmailServer extends BaseEntity implements Serializable {
 	 */
 	public void setFromAddress(String fromAddress) {
 		this.fromAddress = fromAddress;
-	}
-
-	/**
-	 * @return the username
-	 */
-	public String getUsername() {
-		return username;
-	}
-
-	/**
-	 * @param username
-	 *            the username to set
-	 */
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	/**
-	 * @return the password
-	 */
-	public String getPassword() {
-		return password;
-	}
-
-	/**
-	 * @param password
-	 *            the password to set
-	 */
-	public void setPassword(String password) {
-		this.password = password;
 	}
 
 	/**

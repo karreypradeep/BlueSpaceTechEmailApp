@@ -14,6 +14,7 @@ var group_component_1 = require("../group/group.component");
 var dashboard_content_component_1 = require("../dashboard/dashboard_content.component");
 var email_component_1 = require("../email/email.component");
 var primeng_1 = require("primeng/primeng");
+var emailserver_component_1 = require("../emailserver/emailserver.component");
 var DashboardComponent = (function () {
     function DashboardComponent() {
         this.title = "Mass Mailing Application";
@@ -35,11 +36,14 @@ var DashboardComponent = (function () {
         else if (index == 5) {
             this.sideMenuSeleted = "reports";
         }
+        else if (index == 6) {
+            this.sideMenuSeleted = "servers";
+        }
     };
     DashboardComponent = __decorate([
         core_1.Component({
             templateUrl: "./app/dashboard/dashboard.component.html",
-            directives: [primeng_1.TabView, primeng_1.TabPanel, primeng_1.Panel, contact_component_1.ContactComponent, group_component_1.GroupComponent, dashboard_content_component_1.DashboardContentComponent, email_component_1.EmailComponent]
+            directives: [primeng_1.TabView, primeng_1.TabPanel, primeng_1.Panel, contact_component_1.ContactComponent, group_component_1.GroupComponent, dashboard_content_component_1.DashboardContentComponent, email_component_1.EmailComponent, emailserver_component_1.EmailServerComponent]
         }), 
         __metadata('design:paramtypes', [])
     ], DashboardComponent);

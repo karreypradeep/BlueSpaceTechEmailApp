@@ -21,6 +21,7 @@ var EmailComponent = (function () {
         this.active = true;
         this.selectedGroups = [];
         this.msgs = [];
+        this.emailSending = false;
     }
     EmailComponent.prototype.ngOnInit = function () {
         this.commonService.getAllGroups();
@@ -39,9 +40,14 @@ var EmailComponent = (function () {
             _this.active = false;
             setTimeout(function () { return _this.active = true; }, 0);
             _this.msgs.push({ severity: "info", summary: "Email sent successfully.", detail: "" });
+            _this.emailSending = false;
         }, function (error) {
             _this.msgs.push({ severity: "error", summary: "Email sending failed.", detail: error });
+            _this.emailSending = false;
         });
+    };
+    EmailComponent.prototype.showDialog = function () {
+        this.emailSending = true;
     };
     EmailComponent.prototype.cancelClick = function () {
         this.emailVO = new email_1.Email();
@@ -50,7 +56,7 @@ var EmailComponent = (function () {
         core_1.Component({
             selector: "my-email",
             templateUrl: "app/email/email.component.html",
-            directives: [primeng_1.Growl]
+            directives: [primeng_1.Growl, primeng_1.Dialog, primeng_1.ProgressBar]
         }), 
         __metadata('design:paramtypes', [email_service_1.EmailService, common_service_1.CommonService])
     ], EmailComponent);

@@ -21,9 +21,14 @@ var GroupComponent = (function () {
         this.active = true;
     }
     GroupComponent.prototype.onRowSelect = function (event) {
-        this.displayViewDialog = true;
+        var _this = this;
         this.groupSelected = event.data;
-        this.updateGroup = false;
+        this.groupService.getGroupById(this.groupSelected.id)
+            .subscribe(function (groupFromDB) {
+            _this.groupSelected = groupFromDB;
+            _this.displayViewDialog = true;
+            _this.updateGroup = false;
+        });
     };
     GroupComponent.prototype.viewDialogCancelClick = function () {
         this.displayViewDialog = false;

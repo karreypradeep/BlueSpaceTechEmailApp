@@ -58,7 +58,7 @@ public class ContactController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Void> update(@PathVariable final Long id, @RequestBody final Contact contact) throws BusinessException {
+	public ResponseEntity<Contact> update(@PathVariable final Long id, @RequestBody final Contact contact) throws BusinessException {
 
 		// Get existing Financial Year
 		final Contact currentContact = contactService.getContactById(id);
@@ -74,8 +74,11 @@ public class ContactController {
 			contactGroup.getGroup().setContactGroups(contact.getContactGroups());
 		}
 
-		contactService.updateContact(contact);
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		final Contact contactUpdated = contactService.updateContact(contact);
+		contactUpdated.getContactGroups().stream().forEach(contactGroup -> {
+			contactGroup.setContact(null);
+		});
+		return new ResponseEntity<Contact>(contactUpdated, HttpStatus.OK);
 	}
 
 	/**

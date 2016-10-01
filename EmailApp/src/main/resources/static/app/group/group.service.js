@@ -23,6 +23,11 @@ var GroupService = (function () {
             .map(function (res) { return res.json(); })
             .catch(this.handleError);
     };
+    GroupService.prototype.getGroupById = function (id) {
+        return this.http.get(this.groupUrl + "/" + id)
+            .map(function (res) { return res.json(); })
+            .catch(this.handleError);
+    };
     GroupService.prototype.getAllGroupsBySearchCriteria = function (groupSearchCriteria) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');

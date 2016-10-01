@@ -16,6 +16,7 @@ var group_service_1 = require("./group/group.service");
 var contactgroup_service_1 = require("./contactgroup/contactgroup.service");
 var common_service_1 = require("../app/shared/common.service");
 var email_service_1 = require("../app/email/email.service");
+var emailserver_service_1 = require("./emailserver/emailserver.service");
 require('./rxjs-operators');
 var AppComponent = (function () {
     function AppComponent() {
@@ -28,7 +29,7 @@ var AppComponent = (function () {
             templateUrl: "app.component.html",
             styleUrls: ["app.component.css"],
             directives: [router_1.ROUTER_DIRECTIVES],
-            providers: [http_1.HTTP_PROVIDERS, contact_service_1.ContactService, group_service_1.GroupService, contactgroup_service_1.ContactGroupService, common_service_1.CommonService, email_service_1.EmailService]
+            providers: [http_1.HTTP_PROVIDERS, contact_service_1.ContactService, group_service_1.GroupService, contactgroup_service_1.ContactGroupService, common_service_1.CommonService, email_service_1.EmailService, emailserver_service_1.EmailServerService]
         }), 
         __metadata('design:paramtypes', [])
     ], AppComponent);

@@ -82,9 +82,11 @@ public class GroupController {
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Group> getGroupById(@PathVariable final Long id) throws BusinessException {
-		final Group group = groupService.getGroupById(id);
+		Group group = groupService.getGroupById(id);
 		if (group == null) {
 			throw new BusinessException("Supplied Group ID is invalid.");
+		}else{
+			group.setContactCount(group.getContactGroups().size());
 		}
 		return new ResponseEntity<Group>(group, HttpStatus.OK);
 
