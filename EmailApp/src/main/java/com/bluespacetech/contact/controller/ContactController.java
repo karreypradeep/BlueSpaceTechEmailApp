@@ -57,10 +57,9 @@ public class ContactController {
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Contact> update(@PathVariable final Long id, @RequestBody final Contact contact) throws BusinessException {
 
-		// Get existing Financial Year
 		final Contact currentContact = contactService.getContactById(id);
 		if (currentContact == null) {
 			throw new BusinessException("Supplied Contact does not exist.");
@@ -173,7 +172,6 @@ public class ContactController {
 	}
 
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-
 	@RequestMapping(value = "/createContacts", method = RequestMethod.GET)
 	public ResponseEntity<Void> createContacts() throws BusinessException {
 

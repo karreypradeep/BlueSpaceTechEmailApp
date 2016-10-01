@@ -66,5 +66,10 @@ public class EmailServerServiceImpl implements EmailServerService {
 		return emailServerRepository.findByName(emailServerName);
 	}
 
+	@Override
+	public EmailServer getEmailServerById(Long id) throws BusinessException {
+		return emailServerRepository.findOne(id);
+	}
+
 
 }
