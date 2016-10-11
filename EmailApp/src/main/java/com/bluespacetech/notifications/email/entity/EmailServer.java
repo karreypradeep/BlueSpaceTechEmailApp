@@ -43,7 +43,6 @@ public class EmailServer extends BaseEntity implements Serializable {
 	@Column(name = "PORT")
 	private String port;
 
-	@NotEmpty(message = "Number of emails per session is mandatory.")
 	@Column(name = "MAILS_PER_SESSION")
 	private Integer mailsPerSession;
 
