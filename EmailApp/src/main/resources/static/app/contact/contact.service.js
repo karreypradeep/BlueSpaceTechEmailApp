@@ -16,7 +16,7 @@ require('rxjs/add/operator/map');
 var ContactService = (function () {
     function ContactService(http) {
         this.http = http;
-        this.contactUrl = "/contacts";
+        this.contactUrl = "http://localhost:8080/contacts";
     }
     ContactService.prototype.createContact = function (contact) {
         var headers = new http_1.Headers();

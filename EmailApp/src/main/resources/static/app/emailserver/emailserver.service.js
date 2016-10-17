@@ -14,10 +14,22 @@ var Observable_1 = require("rxjs/Observable");
 var EmailServerService = (function () {
     function EmailServerService(http) {
         this.http = http;
-        this.emailServerURL = "/emailserver";
+        this.emailServerURL = "http://localhost:8080/emailServer";
     }
     EmailServerService.prototype.getAllEmailServers = function () {
         return this.http.get(this.emailServerURL)
+            .map(function (res) { return res.json(); })
+            .catch(this.handleError);
+    };
+    EmailServerService.prototype.deleteEmailServer = function (objectId) {
+        return this.http.delete(this.emailServerURL + "/" + objectId)
+            .map(function (res) { return; })
+            .catch(this.handleError);
+    };
+    EmailServerService.prototype.updateEmailServerSubmit = function (emailServer) {
+        var headers = new http_1.Headers();
+        headers.append('Content-Type', 'application/json');
+        return this.http.put(this.emailServerURL + "/" + emailServer.id, JSON.stringify(emailServer), { headers: headers })
             .map(function (res) { return res.json(); })
             .catch(this.handleError);
     };

@@ -16,7 +16,7 @@ require('rxjs/add/operator/map');
 var ContactGroupService = (function () {
     function ContactGroupService(http) {
         this.http = http;
-        this.contactgroupUrl = "/contactgroups";
+        this.contactgroupUrl = "http://localhost:8080/contactgroups";
     }
     ContactGroupService.prototype.getAllContactGroups = function () {
         return this.http.get(this.contactgroupUrl)
