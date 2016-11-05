@@ -15,7 +15,9 @@ import org.springframework.util.Assert;
 
 import com.bluespacetech.core.exceptions.BusinessException;
 import com.bluespacetech.notifications.email.entity.EmailContactGroup;
+import com.bluespacetech.notifications.email.entity.EmailServer;
 import com.bluespacetech.notifications.email.service.EmailContactGroupService;
+import com.bluespacetech.notifications.email.service.EmailServerService;
 import com.bluespacetech.notifications.email.util.ContactGroupMailMessage;
 
 public class ContactGroupMailMessageItemWriter implements ItemWriter<ContactGroupMailMessage>, InitializingBean {
@@ -25,6 +27,8 @@ public class ContactGroupMailMessageItemWriter implements ItemWriter<ContactGrou
 	private JavaMailSender mailSender;
 
 	private EmailContactGroupService emailContactGroupService;
+
+	private EmailServerService emailServerService;
 
 	/**
 	 * A {@link JavaMailSender} to be used to send messages in
@@ -77,17 +81,53 @@ public class ContactGroupMailMessageItemWriter implements ItemWriter<ContactGrou
 	@Override
 	public void write(List<? extends ContactGroupMailMessage> items) throws MailException {
 		try {
-			final MimeMessage[] messages = new MimeMessage[items.size()];
+			final List<EmailServer> emailServers = emailServerService.findAll();
+
 			final List<EmailContactGroup> emailContactGroups = new ArrayList<EmailContactGroup>();
-			int count = 0;
+			int count = 0, toltalMessagesCount = 0;
+			int mailServerCount = 0;
+			MimeMessage[] messages = null;
 			for (final ContactGroupMailMessage contactGroupMailMessage : items) {
-				messages[count] = contactGroupMailMessage.getMimeMessage();
+
 				emailContactGroups.add(contactGroupMailMessage.getEmailContactGroup());
-				count++;
+				if (emailServers != null) {
+
+					// Loop though all email servers
+					if (mailServerCount < emailServers.size()) {
+						// get each configured email server and send mails
+						final EmailServer emailServer = emailServers.get(mailServerCount);
+						// Initialize the messages array to mail server capacity for
+						// sending.
+						if (count == 0) {
+							messages = new MimeMessage[emailServer.getMailsPerSession()];
+						}
+
+						messages[count] = contactGroupMailMessage.getMimeMessage();
+						// Once number of messages reach mail server capacity or all
+						// the messages in the batch are completed, mail/send the
+						// messages.
+						if (count == emailServer.getMailsPerSession() - 1 || toltalMessagesCount == items.size() - 1) {
+							mailSender.send(messages);
+							mailServerCount++;
+							count = 0; 
+						} else {
+							count++;
+						}
+						if (mailServerCount == emailServers.size() - 1) {
+							mailServerCount = 0;
+						}
+						toltalMessagesCount++;
+					}
+				} else {
+					messages = new MimeMessage[items.size()];
+					messages[count] = contactGroupMailMessage.getMimeMessage();
+					count++;
+				}
 			}
 			emailContactGroupService.createEmailContactGroups(emailContactGroups);
-			mailSender.send(messages);
-			// throw new Exception();
+			if (emailServers == null && messages != null) {
+				mailSender.send(messages);
+			}
 		} catch (final MailSendException e) {
 			logger.error(e.getMessage());
 		} catch (final BusinessException e) {
@@ -95,6 +135,14 @@ public class ContactGroupMailMessageItemWriter implements ItemWriter<ContactGrou
 		} catch (final Exception e) {
 			logger.error(e.getMessage());
 		}
+	}
+
+	/**
+	 * @param emailServerService
+	 *            the emailServerService to set
+	 */
+	public void setEmailServerService(EmailServerService emailServerService) {
+		this.emailServerService = emailServerService;
 	}
 
 }
