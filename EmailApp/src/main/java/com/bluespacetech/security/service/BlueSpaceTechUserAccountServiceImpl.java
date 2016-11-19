@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.bluespacetech.core.exceptions.ApplicationException;
 import com.bluespacetech.core.exceptions.BusinessException;
 import com.bluespacetech.core.utility.ViewUtil;
 import com.bluespacetech.security.model.AccessControl;
@@ -19,7 +20,8 @@ import com.bluespacetech.security.repository.UserAccountRepositoryCustom;
 import com.bluespacetech.security.searchcriterias.UserAccountSearchCriteria;
 
 @Service
-@Transactional
+@Transactional(rollbackFor = { Exception.class, RuntimeException.class, BusinessException.class,
+		ApplicationException.class })
 @PreAuthorize("hasAuthority('EXCLUDE_ALL')")
 public class BlueSpaceTechUserAccountServiceImpl implements BlueSpaceTechUserAccountService {
 

@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.bluespacetech.core.exceptions.ApplicationException;
 import com.bluespacetech.core.exceptions.BusinessException;
 import com.bluespacetech.security.model.UserGroup;
 import com.bluespacetech.security.model.UserGroupUserRole;
@@ -15,7 +16,8 @@ import com.bluespacetech.security.repository.UserGroupRepositoryCustom;
 import com.bluespacetech.security.searchcriterias.UserGroupSearchCriteria;
 
 @Service
-@Transactional
+@Transactional(rollbackFor = { Exception.class, RuntimeException.class, BusinessException.class,
+		ApplicationException.class })
 @PreAuthorize("hasAuthority('EXCLUDE_ALL')")
 public class UserGroupServiceImpl implements UserGroupService {
 
