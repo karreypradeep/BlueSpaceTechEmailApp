@@ -57,6 +57,9 @@ public class EmailServerController {
 			emailServerProperty.setEmailServer(emailServer);
 		});
 		final EmailServer updatedEmailServer = emailServerService.updateEmailServer(emailServer);
+		updatedEmailServer.getEmailServerProperties().stream().forEach(emailServerProperty -> {
+			emailServerProperty.setEmailServer(null);
+		});
 		return new ResponseEntity<EmailServer>(updatedEmailServer, HttpStatus.OK);
 	}
 	
