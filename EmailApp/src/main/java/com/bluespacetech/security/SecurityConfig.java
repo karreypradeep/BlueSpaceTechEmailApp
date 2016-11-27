@@ -17,6 +17,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 import com.bluespacetech.security.service.UserService;
 /**
@@ -32,6 +35,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private UserService userService;
 
 	@Autowired
+	private AuthenticationFailure authenticationFailure;
+
+	@Autowired
+	private AuthenticationSuccess authenticationSuccess;
+
+	@Autowired
+	private EntryPointUnauthorizedHandler unauthorizedHandler;
+
+	@Autowired
 	public void configAuthBuilder(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userService).passwordEncoder(this.passwordEncoder());
 	}
@@ -43,8 +55,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.antMatcher("/*/**").authorizeRequests().antMatchers("/*/**").authenticated().and().formLogin().and()
-		.csrf().disable();
+
+		http.csrf().csrfTokenRepository(this.csrfTokenRepository()).and().exceptionHandling()
+		.authenticationEntryPoint(unauthorizedHandler).and().formLogin().successHandler(authenticationSuccess)
+		.failureHandler(authenticationFailure).and().logout().permitAll().and().authorizeRequests()
+		.antMatchers("/index.html", "/**/*.js", "/")
+		.permitAll().anyRequest().authenticated().and()
+		.addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class);
+
+		// http.antMatcher("/*/**").authorizeRequests().antMatchers("/*/**").authenticated().and().formLogin().and().csrf()
+		// .disable();
+		// http.antMatcher("/*/**").authorizeRequests().antMatchers("/*/**").permitAll().and().csrf().disable();
+	}
+
+	private CsrfTokenRepository csrfTokenRepository() {
+		final HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
+		repository.setHeaderName("X-XSRF-TOKEN");
+		return repository;
 	}
 
 }
