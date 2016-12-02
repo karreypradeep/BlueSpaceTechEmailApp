@@ -1,0 +1,45 @@
+MySQL 5.5 database added.  Please make note of these credentials:
+
+       Root User: adminiamxC1t
+   Root Password: 58nwz-KUhpth
+   Database Name: emailapp
+
+Connection URL: mysql://$OPENSHIFT_MYSQL_DB_HOST:$OPENSHIFT_MYSQL_DB_PORT/
+
+You can manage your new MySQL database by also embedding phpmyadmin.
+The phpmyadmin username and password will be the same as the MySQL credentials above.
+
+
+public key
+
+ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAywsdWcXeTbq8kJGBg1OMU1otvBqSVA7iEx4z2gD/ZivsHQv0rElohqFRgsvR1nKrxeINSGDYB8oqvoJqrfpQPuUqUDuRUQoA4g/l5q0kqp3lStJffyH18FDEnAMjG+2oRmxDx81czV37Ca3DrvsSW5HbAJxeynOf4WI6Wyn04DvsrCWDOU84sVynuFmR2nzpCMziQTXrhj53C2ASangpdLG52iCIUUR2jiChfVNVzWlTH7mdpY0wrj5EYaH4aErxfLVnhdhrqLylNXylDhApMsIpWq1r/kUYBek//f+OZT65Q8e0LianBxqj5RGoYV5KkhzGvE/w9tyiuEsA5rfPhQ== rsa-key-20160911
+
+
+
+rhc setup -l srimedhav.college@apeironsol.com -p NEEDSrimedhaV
+rhc cartridge restart -a need -c mysql-5.5
+
+ssh 57d772362d52710ecd000193@emailapp-bluespacetech.rhcloud.com
+
+rhc setup -l pradeepgoud@brilhub.com -p inaskpgoud!533
+rhc cartridge restart -a testapp -c mysql-5.5
+
+rhc app show testapp --gears quota
+
+rhc port-forward -n need -l srimedhav.college@apeironsol.com -p NEEDSrimedhaV -a need
+
+rhc port-forward -n emilent -l pradeepgoud@brilhub.com -p inaskpgoud!533 -a testapp
+
+rhc app create testapp diy-0.1
+
+rhc cartridge add mysql-5.5 --app testapp
+
+
+
+rhc setup -l srimedhav.college@apeironsol.com -p NEEDSrimedhaV
+rhc ssh -a emailapp --ssh C:\PROGRA~1\Git\usr\bin\ssh.exe
+rhc app show emailapp --gears quota
+/var/lib/openshift/57d772362d52710ecd000193/app-root/data/logs 	
+
+https://emailapp-bluespacetech.rhcloud.com/phpmyadmin/
+
