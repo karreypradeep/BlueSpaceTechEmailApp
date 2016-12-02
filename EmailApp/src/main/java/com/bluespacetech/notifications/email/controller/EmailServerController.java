@@ -36,9 +36,6 @@ public class EmailServerController {
 
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Void> create(@RequestBody final EmailServer emailServer) throws BusinessException {
-		emailServer.getEmailServerProperties().stream().forEach(emailServerProperty -> {
-			emailServerProperty.setEmailServer(emailServer);
-		});
 		emailServerService.createEmailServer(emailServer);
 		return new ResponseEntity<Void>(HttpStatus.CREATED);
 	}
@@ -53,13 +50,7 @@ public class EmailServerController {
 		if (!currentEmailServer.getVersion().equals(emailServer.getVersion())) {
 			throw new BusinessException("Stale EmailServer. Please update.");
 		}
-		emailServer.getEmailServerProperties().stream().forEach(emailServerProperty -> {
-			emailServerProperty.setEmailServer(emailServer);
-		});
 		final EmailServer updatedEmailServer = emailServerService.updateEmailServer(emailServer);
-		updatedEmailServer.getEmailServerProperties().stream().forEach(emailServerProperty -> {
-			emailServerProperty.setEmailServer(null);
-		});
 		return new ResponseEntity<EmailServer>(updatedEmailServer, HttpStatus.OK);
 	}
 	
@@ -75,20 +66,12 @@ public class EmailServerController {
 		if (emailServer == null) {
 			throw new BusinessException("Supplied EmailServer ID is invalid.");
 		}
-		emailServer.getEmailServerProperties().stream().forEach(emailServerProperty -> {
-			emailServerProperty.setEmailServer(null);
-		});
 		return new ResponseEntity<EmailServer>(emailServer, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<EmailServer>> getAllEmailServers()throws BusinessException{
 		final List<EmailServer> emailServers = emailServerService.findAll();
-		emailServers.stream().forEach(emailServer -> {
-			emailServer.getEmailServerProperties().stream().forEach(emailServerProperty -> {
-				emailServerProperty.setEmailServer(null);
-			});
-		});
 		return new ResponseEntity<List<EmailServer>>(emailServers,HttpStatus.OK);
 	}
 

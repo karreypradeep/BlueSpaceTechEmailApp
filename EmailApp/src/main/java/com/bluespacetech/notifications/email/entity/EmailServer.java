@@ -5,13 +5,9 @@
 package com.bluespacetech.notifications.email.entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -24,6 +20,7 @@ import com.bluespacetech.core.model.BaseEntity;
 @Entity
 @Table(name = "EMAIL_SERVER")
 public class EmailServer extends BaseEntity implements Serializable {
+
 
 	/**
 	 * 
@@ -61,17 +58,6 @@ public class EmailServer extends BaseEntity implements Serializable {
 	@Column(name = "EMAIL_PASSWORD")
 	private String emailPassword;
 	
-	@OneToMany(mappedBy = "emailServer", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<EmailServerProperties> emailServerProperties =  new ArrayList<>();
-	
-	public List<EmailServerProperties> getEmailServerProperties() {
-		return emailServerProperties;
-	}
-
-	public void setEmailServerProperties(List<EmailServerProperties> emailServerProperties) {
-		this.emailServerProperties = emailServerProperties;
-	}
-
 	public String getEmailUsername() {
 		return emailUsername;
 	}

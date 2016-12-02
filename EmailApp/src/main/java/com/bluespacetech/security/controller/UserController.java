@@ -3,10 +3,17 @@ package com.bluespacetech.security.controller;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +27,7 @@ public class UserController extends AbstractBaseController {
 
 
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public UserDAO user() {
+	public ResponseEntity<UserDAO> user() {
 		final UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
 				.getPrincipal();
 		final UserDAO user = new UserDAO();
@@ -30,6 +37,15 @@ public class UserController extends AbstractBaseController {
 			roles.add(grantedAuthority.getAuthority());
 		}
 		user.setRoles(roles);
-		return user;
+		return new ResponseEntity<UserDAO>(user, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	public ResponseEntity<Void> logoutPage(HttpServletRequest request, HttpServletResponse response) {
+		final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth != null) {
+			new SecurityContextLogoutHandler().logout(request, response, auth);
+		}
+		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 }

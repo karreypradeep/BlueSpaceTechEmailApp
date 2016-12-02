@@ -100,7 +100,7 @@ public class UserRoleController extends AbstractBaseController {
 		final UserRole userRole = UserRoleResourceAssembler
 				.getUserRoleFromResource(userRoleResource);
 
-		userRoleService.createUserRole(userRole);
+		final UserRole result = userRoleService.createUserRole(userRole);
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 
@@ -114,11 +114,11 @@ public class UserRoleController extends AbstractBaseController {
 				.getUserRoleById(id);
 		if (currentUserRole == null) {
 			throw new UserRoleDoesNotExistException(
-					"Supplied Financial year is invalid.");
+					"Supplied User Role is invalid.");
 		}
 		if (!currentUserRole.getVersion().equals(
 				userRoleResource.getVersion())) {
-			throw new BusinessException("Stale Financial Year. Please update.");
+			throw new BusinessException("Stale User Role. Please update.");
 		}
 		// Extract the Financial Year from Resource
 		final UserRole sourceUserRole = UserRoleResourceAssembler

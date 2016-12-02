@@ -59,7 +59,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().csrfTokenRepository(this.csrfTokenRepository()).and().exceptionHandling()
 		.authenticationEntryPoint(unauthorizedHandler).and().formLogin().successHandler(authenticationSuccess)
 		.failureHandler(authenticationFailure).and().logout().permitAll().and().authorizeRequests()
-		.antMatchers("/index.html", "/**/*.js", "/")
+		.antMatchers("/index.html", "/**/*.js", "/**/app/resources/css/**.css", "/**/app/resources/js/**.js",
+						"/**/app/resources/fonts/*.*", "/**/app/resources/css/fonts/*.*", "/")
 		.permitAll().anyRequest().authenticated().and()
 		.addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class);
 
