@@ -21,12 +21,9 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.bluespacetech.contact.entity.Contact;
 import com.bluespacetech.core.model.BaseEntity;
 import com.bluespacetech.security.constants.UserAccountTypeConstant;
 
@@ -64,12 +61,8 @@ public class UserAccount extends BaseEntity implements Serializable {
 	@OneToMany(mappedBy = "userAccount", cascade = CascadeType.ALL, fetch = FetchType.EAGER,orphanRemoval=true)
 	private Collection<UserAccountUserGroup> userAccountUserGroups;
 
-	@OneToMany(mappedBy = "userAccount", cascade = CascadeType.ALL, fetch = FetchType.EAGER,orphanRemoval=true)
-	private Collection<AccessControl> accessControls;
-
-	@OneToOne
-	@JoinColumn(name = "CONTACT_ID")
-	private Contact contact;
+	@Column(name = "EMAIL", nullable = false)
+	private String email;
 
 	public void setUsername(final String username) {
 		this.username = username;
@@ -144,34 +137,18 @@ public class UserAccount extends BaseEntity implements Serializable {
 	}
 
 	/**
-	 * @return the accessControls
+	 * @return the email
 	 */
-	public Collection<AccessControl> getAccessControls() {
-		return accessControls;
+	public String getEmail() {
+		return email;
 	}
 
 	/**
-	 * @param accessControls
-	 *            the accessControls to set
+	 * @param email
+	 *            the email to set
 	 */
-	public void setAccessControls(final Collection<AccessControl> accessControls) {
-		this.accessControls = accessControls;
+	public void setEmail(String email) {
+		this.email = email;
 	}
-
-	/**
-	 * @return the contact
-	 */
-	public Contact getContact() {
-		return contact;
-	}
-
-	/**
-	 * @param contact
-	 *            the contact to set
-	 */
-	public void setContact(Contact contact) {
-		this.contact = contact;
-	}
-
 
 }

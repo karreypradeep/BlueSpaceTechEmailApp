@@ -10,6 +10,7 @@ package com.bluespacetech.group.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +30,7 @@ import com.bluespacetech.group.searchcriteria.GroupSearchCriteria;
 @Service
 @Transactional(rollbackFor = { Exception.class, RuntimeException.class, BusinessException.class,
 		ApplicationException.class })
-// @PreAuthorize("hasAuthority('EXCLUDE_ALL')")
+@PreAuthorize("hasAuthority('EXCLUDE_ALL')")
 public class GroupServiceImpl implements GroupService {
 
 	@Autowired
@@ -45,8 +46,7 @@ public class GroupServiceImpl implements GroupService {
 	}
 
 	@Override
-	// @PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or
-	// (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('CREATE_CONTACT'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('CREATE_CONTACT'))")
 	public Group createGroup(final Group group) throws BusinessException {
 		GroupServiceImpl.validateGroup(group);
 		final Group newGroup = groupRepository.save(group);
@@ -54,23 +54,20 @@ public class GroupServiceImpl implements GroupService {
 	}
 
 	@Override
-	// @PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or
-	// (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('DELETE_CONTACT'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('DELETE_CONTACT'))")
 	public void deleteGroup(final Long groupId) throws BusinessException {
 		groupRepository.delete(groupId);
 	}
 
 	@Override
-	// @PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or
-	// (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('ACCESS_GROUP'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACCESS_GROUP'))")
 	public Group getGroupById(final Long groupId) {
 		final Group group = groupRepository.findOne(groupId);
 		return group;
 	}
 
 	@Override
-	// @PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or
-	// (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('UPDATE_CONTACT'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('UPDATE_CONTACT'))")
 	public Group updateGroup(final Group group) throws BusinessException {
 		GroupServiceImpl.validateGroup(group);
 		final Group updatedGroup = groupRepository.save(group);
@@ -81,8 +78,7 @@ public class GroupServiceImpl implements GroupService {
 	 * @see com.bluespacetech.group.service.GroupService#findByName(java.lang.String)
 	 */
 	@Override
-	// @PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or
-	// (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('ACCESS_GROUP'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACCESS_GROUP'))")
 	public List<Group> findByName(final String email) {
 		return groupRepository.findByNameLike(email);
 	}
@@ -91,15 +87,13 @@ public class GroupServiceImpl implements GroupService {
 	 * @see com.bluespacetech.group.service.GroupService#findAll()
 	 */
 	@Override
-	// @PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or
-	// (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('ACCESS_GROUP'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACCESS_GROUP'))")
 	public List<Group> findAll() {
 		return groupRepository.findAll();
 	}
 
 	@Override
-	// @PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or
-	// (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('ACCESS_GROUP'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACCESS_GROUP'))")
 	public List<Group> findBySearchCriteria(GroupSearchCriteria groupSearchCriteria) {
 		return groupRepositoryCustom.findGroupsBySearchCriteria(groupSearchCriteria);
 	}

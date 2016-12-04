@@ -44,7 +44,7 @@ public class ContactServiceImpl implements ContactService {
 		}
 	}
 
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('CREATE_CONTACT'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('CREATE_CONTACT'))")
 	@Override
 	public Contact createContact(final Contact contact) throws BusinessException {
 		ContactServiceImpl.validateContact(contact);
@@ -53,25 +53,25 @@ public class ContactServiceImpl implements ContactService {
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or  (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('DELETE_CONTACT'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or  (hasAuthority('DELETE_CONTACT'))")
 	public void deleteContact(final Long contactId) throws BusinessException {
 		contactRepository.delete(contactId);
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN')  and hasAuthority('ACCESS_CONTACT'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACCESS_CONTACT'))")
 	public List<Contact> findByFirstNameOrLastName(final String firstName, final String lastName) {
 		return contactRepository.findByFirstNameLikeOrLastNameLike(firstName, lastName);
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN')  and hasAuthority('ACCESS_CONTACT'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACCESS_CONTACT'))")
 	public Contact getContactById(final Long contactId) {
 		return contactRepository.findOne(contactId);
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN')  and hasAuthority('UPDATE_CONTACT'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('UPDATE_CONTACT'))")
 	public Contact updateContact(final Contact contact) throws BusinessException {
 		ContactServiceImpl.validateContact(contact);
 		final Contact updatedContact = contactRepository.save(contact);
@@ -79,19 +79,19 @@ public class ContactServiceImpl implements ContactService {
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN')  and hasAuthority('ACCESS_CONTACT'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACCESS_CONTACT'))")
 	public List<Contact> findByEmail(final String email) {
 		return contactRepository.findByEmailLike(email);
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN')  and hasAuthority('ACCESS_CONTACT'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACCESS_CONTACT'))")
 	public List<Contact> findAll() {
 		return contactRepository.findAll();
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN')  and hasAuthority('ACCESS_CONTACT'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACCESS_CONTACT'))")
 	public List<Contact> findBySearchCriteria(ContactSearchCriteria contactSearchCriteria) {
 		return contactRepositoryCustom.findContactsBySearchCriteria(contactSearchCriteria);
 	}

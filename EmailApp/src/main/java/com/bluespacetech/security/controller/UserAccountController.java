@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bluespacetech.contact.entity.Contact;
 import com.bluespacetech.contact.service.ContactService;
 import com.bluespacetech.core.controller.AbstractBaseController;
 import com.bluespacetech.core.exceptions.BusinessException;
+import com.bluespacetech.security.constants.UserAccountTypeConstant;
 import com.bluespacetech.security.exceptions.UserAccountDoesNotExistException;
 import com.bluespacetech.security.model.UserAccount;
 import com.bluespacetech.security.model.UserAccountUserGroup;
@@ -125,16 +125,7 @@ public class UserAccountController extends AbstractBaseController {
 
 		final UserAccount userAccount = UserAccountResourceAssembler
 				.getUserAccountFromResource(userAccountResource);
-		if (userAccountResource.getContactId() == null) {
-			throw new UserAccountDoesNotExistException(
-					"Contact Id cannot be null.");
-		}
-		final Contact contact = contactService.getContactById(userAccountResource.getContactId());
-		if (contact == null) {
-			throw new UserAccountDoesNotExistException(
-					"Contact Id supplied is not valid.");
-		}
-		userAccount.setContact(contact);
+		userAccount.setUserAccountType(UserAccountTypeConstant.ACC_TYPE_USER);
 		blueSpaceTechUserAccountService.createUserAccount(userAccount);
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}

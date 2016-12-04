@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.bluespacetech.core.exceptions.ApplicationException;
 import com.bluespacetech.core.exceptions.BusinessException;
 import com.bluespacetech.core.utility.ViewUtil;
-import com.bluespacetech.security.model.AccessControl;
 import com.bluespacetech.security.model.UserAccount;
 import com.bluespacetech.security.model.UserAccountUserGroup;
 import com.bluespacetech.security.repository.UserAccountRepository;
@@ -67,10 +66,6 @@ public class BlueSpaceTechUserAccountServiceImpl implements BlueSpaceTechUserAcc
 			userAccountUserGroup.setUserAccount(userAccount);
 		}
 
-		for (final AccessControl accessControl : userAccount.getAccessControls()) {
-			accessControl.setUserAccount(userAccount);
-		}
-
 		return userAccountRepository.save(userAccount);
 	}
 
@@ -80,10 +75,6 @@ public class BlueSpaceTechUserAccountServiceImpl implements BlueSpaceTechUserAcc
 			throws BusinessException {
 		for (final UserAccountUserGroup userAccountUserGroup : userAccount.getUserAccountUserGroups()) {
 			userAccountUserGroup.setUserAccount(userAccount);
-		}
-
-		for (final AccessControl accessControl : userAccount.getAccessControls()) {
-			accessControl.setUserAccount(userAccount);
 		}
 
 		return userAccountRepository.save(userAccount);

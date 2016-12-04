@@ -16,7 +16,6 @@ import java.util.Collection;
 
 import org.springframework.hateoas.ResourceSupport;
 
-import com.bluespacetech.contact.resources.ContactResource;
 import com.bluespacetech.security.constants.UserAccountTypeConstant;
 
 public class UserAccountResource  extends ResourceSupport  {
@@ -24,8 +23,6 @@ public class UserAccountResource  extends ResourceSupport  {
 	private Long objectId;
 
 	private Long version;
-
-	private ContactResource contact;
 
 	private Collection<UserAccountUserGroupResource> userAccountUserGroups;
 
@@ -45,9 +42,7 @@ public class UserAccountResource  extends ResourceSupport  {
 
 	private String password;
 
-	private Long contactId;
-
-	private Collection<AccessControlResource> accessControls;
+	private String email;
 
 	/**
 	 * @return the objectId
@@ -75,21 +70,6 @@ public class UserAccountResource  extends ResourceSupport  {
 	 */
 	public void setVersion(final Long version) {
 		this.version = version;
-	}
-
-	/**
-	 * @return the contact
-	 */
-	public ContactResource getContact() {
-		return contact;
-	}
-
-	/**
-	 * @param contact
-	 *            the contact to set
-	 */
-	public void setContact(final ContactResource contact) {
-		this.contact = contact;
 	}
 
 	/**
@@ -220,33 +200,18 @@ public class UserAccountResource  extends ResourceSupport  {
 	}
 
 	/**
-	 * @return the contactId
+	 * @return the email
 	 */
-	public Long getContactId() {
-		return contactId;
+	public String getEmail() {
+		return email;
 	}
 
 	/**
-	 * @param contactId
-	 *            the contactId to set
+	 * @param email
+	 *            the email to set
 	 */
-	public void setContactId(final Long contactId) {
-		this.contactId = contactId;
+	public void setEmail(String email) {
+		this.email = email;
 	}
-
-	/**
-	 * @return the accessControls
-	 */
-	public Collection<AccessControlResource> getAccessControls() {
-		return accessControls;
-	}
-
-	/**
-	 * @param accessControls the accessControls to set
-	 */
-	public void setAccessControls(final Collection<AccessControlResource> accessControls) {
-		this.accessControls = accessControls;
-	}
-
 
 }

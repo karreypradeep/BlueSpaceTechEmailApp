@@ -17,13 +17,10 @@ import java.util.Map;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 
-import com.bluespacetech.contact.resources.ContactResource;
 import com.bluespacetech.security.controller.UserAccountController;
-import com.bluespacetech.security.model.AccessControl;
 import com.bluespacetech.security.model.UserAccount;
 import com.bluespacetech.security.model.UserAccountUserGroup;
 import com.bluespacetech.security.model.UserGroup;
-import com.bluespacetech.security.resources.AccessControlResource;
 import com.bluespacetech.security.resources.UserAccountResource;
 import com.bluespacetech.security.resources.UserAccountUserGroupResource;
 import com.bluespacetech.security.resources.UserGroupResource;
@@ -51,11 +48,7 @@ ResourceAssemblerSupport<UserAccount, UserAccountResource> {
 		userAccountResource.setObjectId(userAccount.getId());
 		userAccountResource.setVersion(userAccount.getVersion());
 		userAccountResource.setUsername(userAccount.getUsername());
-		if (userAccount.getContact() != null) {
-			userAccountResource
-					.setContact(ContactResource.convertToPeronResource(userAccount.getContact(), false, true, true));
-			userAccountResource.setContactId(userAccount.getContact().getId());
-		}
+		userAccountResource.setEmail(userAccount.getEmail());
 		userAccountResource.setAccountExpired(userAccount.isAccountExpired());
 		userAccountResource.setAccountLocked(userAccount.isAccountLocked());
 		userAccountResource.setActive(userAccount.isActive());
@@ -70,7 +63,6 @@ ResourceAssemblerSupport<UserAccount, UserAccountResource> {
 	public UserAccountResource toCompleteResource(final UserAccount userAccount,final Map<Long,UserGroup> userGroupsMap) {
 		final UserAccountResource userAccountResource = this.toResource(userAccount);
 		final List<UserAccountUserGroupResource> userAccountUserGroupResources = new ArrayList<UserAccountUserGroupResource>();
-		final List<AccessControlResource> accessControlResources = new ArrayList<AccessControlResource>();
 
 		final UserGroupResourceAssembler userAccountResourceAssembler = new UserGroupResourceAssembler();
 		if(userAccount.getUserAccountUserGroups()!=null) {
@@ -83,16 +75,6 @@ ResourceAssemblerSupport<UserAccount, UserAccountResource> {
 			}
 		}
 		userAccountResource.setUserAccountUserGroups(userAccountUserGroupResources);
-		if(userAccount.getAccessControls()!=null) {
-			for(final AccessControl accessControl : userAccount.getAccessControls()){
-				final AccessControlResource accessControlResource = new AccessControlResource();
-				accessControlResource.setBranchId(accessControl.getBranchId());
-				accessControlResource.setVersion(accessControl.getVersion());
-				accessControlResource.setObjectId(accessControl.getId());
-				accessControlResources.add(accessControlResource);
-			}
-		}
-		userAccountResource.setAccessControls(accessControlResources);
 		return userAccountResource;
 	}
 	/**
@@ -112,7 +94,8 @@ ResourceAssemblerSupport<UserAccount, UserAccountResource> {
 		destinationUserAccount.setActive(sourceUserAccount.isActive());
 		destinationUserAccount.setCredentialsExpired(sourceUserAccount.isCredentialsExpired());
 		destinationUserAccount.setUserAccountType(sourceUserAccount.getUserAccountType());
-
+		destinationUserAccount.setUsername(sourceUserAccount.getUsername());
+		destinationUserAccount.setEmail(sourceUserAccount.getEmail());
 		final Collection<UserAccountUserGroup> userAccountUserRoleToPersist = new ArrayList<UserAccountUserGroup>();
 		final Map<Long,UserAccountUserGroup> existingUserAccountUserGroups = new HashMap<Long,UserAccountUserGroup>();
 		if(destinationUserAccount.getUserAccountUserGroups()!=null){
@@ -132,30 +115,6 @@ ResourceAssemblerSupport<UserAccount, UserAccountResource> {
 		}
 		destinationUserAccount.getUserAccountUserGroups().clear();
 		destinationUserAccount.getUserAccountUserGroups().addAll(userAccountUserRoleToPersist);
-
-
-		final Collection<AccessControl> accessControlToPersist = new ArrayList<AccessControl>();
-		final Map<Long,AccessControl> existingAccessControls = new HashMap<Long,AccessControl>();
-
-		if(destinationUserAccount.getAccessControls()!=null){
-			for(final AccessControl accessControl:destinationUserAccount.getAccessControls()){
-				existingAccessControls.put(accessControl.getId(),accessControl);
-			}
-
-			for(final AccessControl newAccessControl : sourceUserAccount.getAccessControls()){
-				if(newAccessControl.getResourceObjectId()!=null && existingAccessControls.containsKey(newAccessControl.getResourceObjectId())) {
-					accessControlToPersist.add(existingAccessControls.get(newAccessControl.getResourceObjectId()));
-				}else{
-					final AccessControl accessControl = new AccessControl();
-					accessControl.setBranchId(newAccessControl.getBranchId());
-					accessControlToPersist.add(accessControl);
-				}
-			}
-		}
-		destinationUserAccount.getAccessControls().clear();
-		destinationUserAccount.getAccessControls().addAll(accessControlToPersist);
-
-
 	}
 
 	/**
@@ -173,7 +132,7 @@ ResourceAssemblerSupport<UserAccount, UserAccountResource> {
 		destinationUserAccount.setCredentialsExpired(userAccountResource.isCredentialsExpired());
 		destinationUserAccount.setUserAccountType(userAccountResource.getUserAccountType());
 		destinationUserAccount.setUsername(userAccountResource.getUsername());
-
+		destinationUserAccount.setEmail(userAccountResource.getEmail());
 		final Collection<UserAccountUserGroup> userAccountUserGroups  = new ArrayList<UserAccountUserGroup>();
 		if(userAccountResource.getUserAccountUserGroups()!=null) {
 			for(final UserAccountUserGroupResource userAccountUserGroupResource :userAccountResource.getUserAccountUserGroups()){
@@ -184,17 +143,6 @@ ResourceAssemblerSupport<UserAccount, UserAccountResource> {
 			}
 		}
 		destinationUserAccount.setUserAccountUserGroups(userAccountUserGroups);
-
-		final Collection<AccessControl> accessControls  = new ArrayList<AccessControl>();
-		if(userAccountResource.getAccessControls()!=null) {
-			for(final AccessControlResource accessControlResource :userAccountResource.getAccessControls()){
-				final AccessControl accessControl = new AccessControl();
-				accessControl.setBranchId(accessControlResource.getBranchId());
-				accessControl.setResourceObjectId(accessControlResource.getObjectId());
-				accessControls.add(accessControl);
-			}
-		}
-		destinationUserAccount.setAccessControls(accessControls);
 		return destinationUserAccount;
 	}
 
