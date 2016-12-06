@@ -29,4 +29,6 @@ public interface EmailServerPropertiesService {
 			throws BusinessException;
 
 	List<EmailServerProperties> findByEmailServer(final EmailServer emailServer);
+
+	EmailServerProperties getEmailServerPropertiesById(final Long id) throws BusinessException;
 }

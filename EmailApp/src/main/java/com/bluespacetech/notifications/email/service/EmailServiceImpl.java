@@ -35,14 +35,14 @@ public class EmailServiceImpl implements EmailService {
 	private EmailRepository emailRepository;
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('CREATE_EMAIL'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('CREATE_EMAIL'))")
 	public Email createEmail(final Email email) throws BusinessException {
 		final Email newEmail = emailRepository.save(email);
 		return newEmail;
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('CREATE_EMAIL'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('CREATE_EMAIL'))")
 	public Email createEmail(final EmailVO emailVO) throws BusinessException {
 		Email email = new Email();
 		email.setMessage(emailVO.getMessage());
@@ -53,7 +53,7 @@ public class EmailServiceImpl implements EmailService {
 
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('ACCESS_EMAIL'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACCESS_EMAIL'))")
 	public List<Email> findAll() {
 		return emailRepository.findAll();
 	}

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.util.Assert;
 
 import com.bluespacetech.core.exceptions.BusinessException;
@@ -96,6 +97,9 @@ public class ContactGroupMailMessageItemWriter implements ItemWriter<ContactGrou
 					if (mailServerCount < emailServers.size()) {
 						// get each configured email server and send mails
 						final EmailServer emailServer = emailServers.get(mailServerCount);
+						if (mailSender instanceof JavaMailSenderImpl) {
+							contactGroupMailMessage.getMimeMessage().setFrom(emailServer.getFromAddress());
+						}
 						// Initialize the messages array to mail server capacity for
 						// sending.
 						if (count == 0) {
@@ -113,10 +117,10 @@ public class ContactGroupMailMessageItemWriter implements ItemWriter<ContactGrou
 						} else {
 							count++;
 						}
-						if (mailServerCount == emailServers.size() - 1) {
+						toltalMessagesCount++;
+						if (mailServerCount == emailServers.size() && toltalMessagesCount < items.size()) {
 							mailServerCount = 0;
 						}
-						toltalMessagesCount++;
 					}
 				} else {
 					messages = new MimeMessage[items.size()];

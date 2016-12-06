@@ -35,29 +35,35 @@ public class EmailServerPropertiesServiceImpl implements EmailServerPropertiesSe
 	private EmailServerPropertiesRepository emailServerPropertiesRepository;
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('ACCESS_EMAIL_SERVER_PROPERTIES'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACCESS_EMAIL_SERVER'))")
 	public List<EmailServerProperties> findByEmailServer(EmailServer emailServer) {
 		return emailServerPropertiesRepository.findEmailServerPropertiesByEmailServer(emailServer);
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('CREATE_EMAIL_SERVER_PROPERTIES'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('CREATE_EMAIL_SERVER'))")
 	public EmailServerProperties createEmailServerProperty(EmailServerProperties emailServerProperties)
 			throws BusinessException {
 		return emailServerPropertiesRepository.save(emailServerProperties);
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('DELETE_EMAIL_SERVER_PROPERTIES'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('DELETE_EMAIL_SERVER'))")
 	public void deleteEmailServerProperty(Long emailServerPropertiesId) throws BusinessException {
 		emailServerPropertiesRepository.delete(emailServerPropertiesId);
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('UPDATE_EMAIL_SERVER_PROPERTIES'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('UPDATE_EMAIL_SERVER'))")
 	public EmailServerProperties updateEmailServerProperty(EmailServerProperties emailServerProperties)
 			throws BusinessException {
 		return emailServerPropertiesRepository.save(emailServerProperties);
+	}
+
+	@Override
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACCESS_EMAIL_SERVER'))")
+	public EmailServerProperties getEmailServerPropertiesById(Long id) throws BusinessException {
+		return emailServerPropertiesRepository.findOne(id);
 	}
 
 }
