@@ -22,4 +22,5 @@ public interface EmailServerPropertiesRepository extends JpaRepository<EmailServ
 
 	List<EmailServerProperties> findEmailServerPropertiesByEmailServer(final EmailServer emailServer);
 
+	List<EmailServerProperties> findByEmailServerIn(final List<EmailServer> emailServers);
 }

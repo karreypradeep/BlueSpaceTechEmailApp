@@ -66,4 +66,10 @@ public class EmailServerPropertiesServiceImpl implements EmailServerPropertiesSe
 		return emailServerPropertiesRepository.findOne(id);
 	}
 
+	@Override
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACCESS_EMAIL_SERVER'))")
+	public List<EmailServerProperties> findByEmailServers(List<EmailServer> emailServers) {
+		return emailServerPropertiesRepository.findByEmailServerIn(emailServers);
+	}
+
 }

@@ -46,6 +46,7 @@ public class EmailServerPropertiesController {
 		if (emailServer == null) {
 			throw new BusinessException("Supplied EmailServer does not exist.");
 		}
+		emailServerProperties.setEmailServer(emailServer);
 		final EmailServerProperties updatedEmailServerProperties = emailServerPropertiesService
 				.createEmailServerProperty(emailServerProperties);
 		return new ResponseEntity<EmailServerProperties>(updatedEmailServerProperties, HttpStatus.CREATED);
@@ -60,7 +61,7 @@ public class EmailServerPropertiesController {
 		if (emailServer == null) {
 			throw new BusinessException("Supplied EmailServer does not exist.");
 		}
-
+		emailServerProperties.setEmailServer(emailServer);
 		final EmailServerProperties createEmailServerProperties = emailServerPropertiesService
 				.getEmailServerPropertiesById(id);
 		if (createEmailServerProperties == null) {
@@ -82,18 +83,27 @@ public class EmailServerPropertiesController {
 	}
 
 	@RequestMapping(value="/{id}", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<EmailServer> getEmailServerById(@PathVariable final Long id)throws BusinessException{
-		final EmailServer emailServer = emailServerService.getEmailServerById(id);
-		if (emailServer == null) {
-			throw new BusinessException("Supplied EmailServer ID is invalid.");
+	public ResponseEntity<EmailServerProperties> getEmailServerById(@PathVariable final Long id)
+			throws BusinessException {
+		final EmailServerProperties emailServerProperties = emailServerPropertiesService
+				.getEmailServerPropertiesById(id);
+		if (emailServerProperties == null) {
+			throw new BusinessException("Supplied EmailServerProperties ID is invalid.");
 		}
-		return new ResponseEntity<EmailServer>(emailServer, HttpStatus.OK);
+		return new ResponseEntity<EmailServerProperties>(emailServerProperties, HttpStatus.OK);
 	}
 
-	@RequestMapping(value="", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<EmailServer>> getAllEmailServers()throws BusinessException{
-		final List<EmailServer> emailServers = emailServerService.findAll();
-		return new ResponseEntity<List<EmailServer>>(emailServers,HttpStatus.OK);
+	@RequestMapping(value = "/emailServer/{emailServerId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<EmailServerProperties>> getAllEmailServerProperties(
+			@PathVariable final Long emailServerId)
+					throws BusinessException {
+		final EmailServer emailServer = emailServerService.getEmailServerById(emailServerId);
+		if (emailServer == null) {
+			throw new BusinessException("Supplied EmailServer does not exist.");
+		}
+		final List<EmailServerProperties> emailServerProperties = emailServerPropertiesService
+				.findByEmailServer(emailServer);
+		return new ResponseEntity<List<EmailServerProperties>>(emailServerProperties, HttpStatus.OK);
 	}
 
 }

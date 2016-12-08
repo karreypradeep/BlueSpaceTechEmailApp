@@ -1,7 +1,10 @@
 package com.bluespacetech.notifications.email.batch;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 import javax.mail.internet.MimeMessage;
 
@@ -17,7 +20,9 @@ import org.springframework.util.Assert;
 import com.bluespacetech.core.exceptions.BusinessException;
 import com.bluespacetech.notifications.email.entity.EmailContactGroup;
 import com.bluespacetech.notifications.email.entity.EmailServer;
+import com.bluespacetech.notifications.email.entity.EmailServerProperties;
 import com.bluespacetech.notifications.email.service.EmailContactGroupService;
+import com.bluespacetech.notifications.email.service.EmailServerPropertiesService;
 import com.bluespacetech.notifications.email.service.EmailServerService;
 import com.bluespacetech.notifications.email.util.ContactGroupMailMessage;
 
@@ -30,6 +35,8 @@ public class ContactGroupMailMessageItemWriter implements ItemWriter<ContactGrou
 	private EmailContactGroupService emailContactGroupService;
 
 	private EmailServerService emailServerService;
+
+	private EmailServerPropertiesService emailServerPropertiesService;
 
 	/**
 	 * A {@link JavaMailSender} to be used to send messages in
@@ -83,22 +90,56 @@ public class ContactGroupMailMessageItemWriter implements ItemWriter<ContactGrou
 	public void write(List<? extends ContactGroupMailMessage> items) throws MailException {
 		try {
 			final List<EmailServer> emailServers = emailServerService.findAll();
+			final Map<Long, Properties> emailServerPropertiesByServers = new HashMap<Long, Properties>();
+			Properties oldMailProperties = null;
+			if (mailSender instanceof JavaMailSenderImpl) {
+				oldMailProperties = ((JavaMailSenderImpl) mailSender).getJavaMailProperties();
+				if (emailServers != null) {
+					final List<EmailServerProperties> emailServerPropertiesOfServers = emailServerPropertiesService
+							.findByEmailServers(emailServers);
+					for (final EmailServerProperties emailServerProperty : emailServerPropertiesOfServers) {
+						if (emailServerPropertiesByServers.get(emailServerProperty.getEmailServer().getId()) != null) {
+							emailServerPropertiesByServers.get(emailServerProperty.getEmailServer().getId())
+							.put(emailServerProperty.getPropertyName(), emailServerProperty.getValue());
+						} else {
+							final Properties properties = new Properties();
+							properties.put(emailServerProperty.getPropertyName(), emailServerProperty.getValue());
+							emailServerPropertiesByServers.put(emailServerProperty.getEmailServer().getId(),
+									properties);
+						}
+					}
+					for (final Map.Entry<Long, Properties> entry : emailServerPropertiesByServers.entrySet()) {
+						final Properties properties = entry.getValue();
+						if (oldMailProperties != null && oldMailProperties.size() > 0) {
+							for (final Object key : oldMailProperties.keySet()) {
+								if (properties.get(key) == null) {
+									properties.put(key, oldMailProperties.get(key));
+								}
+							}
+						}
+					}
+				}
+			}
 
 			final List<EmailContactGroup> emailContactGroups = new ArrayList<EmailContactGroup>();
 			int count = 0, toltalMessagesCount = 0;
 			int mailServerCount = 0;
 			MimeMessage[] messages = null;
 			for (final ContactGroupMailMessage contactGroupMailMessage : items) {
-
 				emailContactGroups.add(contactGroupMailMessage.getEmailContactGroup());
 				if (emailServers != null) {
-
 					// Loop though all email servers
 					if (mailServerCount < emailServers.size()) {
 						// get each configured email server and send mails
 						final EmailServer emailServer = emailServers.get(mailServerCount);
 						if (mailSender instanceof JavaMailSenderImpl) {
 							contactGroupMailMessage.getMimeMessage().setFrom(emailServer.getFromAddress());
+							if (emailServerPropertiesByServers.get(emailServer.getId()) != null) {
+								((JavaMailSenderImpl) mailSender)
+								.setJavaMailProperties(emailServerPropertiesByServers.get(emailServer.getId()));
+							} else {
+								((JavaMailSenderImpl) mailSender).setJavaMailProperties(oldMailProperties);
+							}
 						}
 						// Initialize the messages array to mail server capacity for
 						// sending.
@@ -132,6 +173,9 @@ public class ContactGroupMailMessageItemWriter implements ItemWriter<ContactGrou
 			if (emailServers == null && messages != null) {
 				mailSender.send(messages);
 			}
+			if (oldMailProperties != null && oldMailProperties.size() > 0 && mailSender instanceof JavaMailSenderImpl) {
+				((JavaMailSenderImpl) mailSender).setJavaMailProperties(oldMailProperties);
+			}
 		} catch (final MailSendException e) {
 			logger.error(e.getMessage());
 		} catch (final BusinessException e) {
@@ -147,6 +191,14 @@ public class ContactGroupMailMessageItemWriter implements ItemWriter<ContactGrou
 	 */
 	public void setEmailServerService(EmailServerService emailServerService) {
 		this.emailServerService = emailServerService;
+	}
+
+	/**
+	 * @param emailServerPropertiesService
+	 *            the emailServerPropertiesService to set
+	 */
+	public void setEmailServerPropertiesService(EmailServerPropertiesService emailServerPropertiesService) {
+		this.emailServerPropertiesService = emailServerPropertiesService;
 	}
 
 }

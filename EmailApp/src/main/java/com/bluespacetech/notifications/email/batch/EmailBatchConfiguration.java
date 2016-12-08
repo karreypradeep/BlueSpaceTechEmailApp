@@ -19,6 +19,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 
 import com.bluespacetech.notifications.email.service.EmailContactGroupService;
+import com.bluespacetech.notifications.email.service.EmailServerPropertiesService;
 import com.bluespacetech.notifications.email.service.EmailServerService;
 import com.bluespacetech.notifications.email.util.ContactGroupMailMessage;
 import com.bluespacetech.notifications.email.valueobjects.EmailContactGroupVO;
@@ -44,6 +45,9 @@ public class EmailBatchConfiguration {
 
 	@Autowired
 	public EmailServerService emailServerService;
+
+	@Autowired
+	public EmailServerPropertiesService emailServerPropertiesService;
 
 	@Autowired
 	private VelocityEngine velocityEngine;
@@ -76,6 +80,7 @@ public class EmailBatchConfiguration {
 		final ContactGroupMailMessageItemWriter writer = new ContactGroupMailMessageItemWriter();
 		writer.setMailSender(javaMailSender);
 		writer.setEmailServerService(emailServerService);
+		writer.setEmailServerPropertiesService(emailServerPropertiesService);
 		writer.setEmailContactGroupService(emailContactGroupService);
 		return writer;
 	}
