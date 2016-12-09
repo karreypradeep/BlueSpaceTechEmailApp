@@ -12,7 +12,11 @@ public class UserDAO implements Serializable {
 
 	private String loggedInUserName;
 
+	private String userType;
+
 	private Collection<String> roles;
+
+	private Collection<String> uiRoles;
 
 	/**
 	 * @return the loggedInUserName
@@ -42,6 +46,36 @@ public class UserDAO implements Serializable {
 	 */
 	public void setRoles(Collection<String> roles) {
 		this.roles = roles;
+	}
+
+	/**
+	 * @return the uiRoles
+	 */
+	public Collection<String> getUiRoles() {
+		return uiRoles;
+	}
+
+	/**
+	 * @param uiRoles
+	 *            the uiRoles to set
+	 */
+	public void setUiRoles(Collection<String> uiRoles) {
+		this.uiRoles = uiRoles;
+	}
+
+	/**
+	 * @return the userType
+	 */
+	public String getUserType() {
+		return userType;
+	}
+
+	/**
+	 * @param userType
+	 *            the userType to set
+	 */
+	public void setUserType(String userType) {
+		this.userType = userType;
 	}
 
 }

@@ -1,5 +1,8 @@
 package com.bluespacetech.security.constants;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.bluespacetech.core.constants.Labeled;
 
 /**
@@ -78,4 +81,11 @@ public enum GrantConstant implements Labeled {
 		this.grantUI = grantUI;
 	}
 
+	public static Map<String, String> getUIGrantsByGrants() {
+		final Map<String, String> uiGrantsByGrantsMap = new HashMap<String, String>();
+		for (final GrantConstant grantConstant : GrantConstant.values()) {
+			uiGrantsByGrantsMap.put(grantConstant.getLabel(), grantConstant.getGrantUI());
+		}
+		return uiGrantsByGrantsMap;
+	}
 }

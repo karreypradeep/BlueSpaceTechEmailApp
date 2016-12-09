@@ -2,6 +2,7 @@ package com.bluespacetech.security.controller;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bluespacetech.core.controller.AbstractBaseController;
+import com.bluespacetech.security.constants.GrantConstant;
+import com.bluespacetech.security.constants.UserAccountTypeConstant;
 import com.bluespacetech.security.dao.UserDAO;
 
 @RestController
@@ -33,10 +36,30 @@ public class UserController extends AbstractBaseController {
 		final UserDAO user = new UserDAO();
 		user.setLoggedInUserName(userDetails.getUsername());
 		final Collection<String> roles = new ArrayList<String>();
+		final Collection<String> uiRoles = new ArrayList<String>();
+		final Map<String, String> uiGrantsByGrantsMap = GrantConstant.getUIGrantsByGrants();
 		for (final GrantedAuthority grantedAuthority : userDetails.getAuthorities()) {
+
+			if (UserAccountTypeConstant.ACC_TYPE_SUPER_ADMIN.getAccountType().equals(grantedAuthority.getAuthority())) {
+				user.setUserType(UserAccountTypeConstant.ACC_TYPE_SUPER_ADMIN.getAccountType());
+			} else if (UserAccountTypeConstant.ACC_TYPE_ADMIN.getAccountType()
+					.equals(grantedAuthority.getAuthority())) {
+				user.setUserType(UserAccountTypeConstant.ACC_TYPE_ADMIN.getAccountType());
+			} else if (UserAccountTypeConstant.ACC_TYPE_EMPLOYEE.getAccountType()
+					.equals(grantedAuthority.getAuthority())) {
+				user.setUserType(UserAccountTypeConstant.ACC_TYPE_EMPLOYEE.getAccountType());
+			} else if (UserAccountTypeConstant.ACC_TYPE_USER.getAccountType().toString()
+					.equals(grantedAuthority.getAuthority())) {
+				user.setUserType(UserAccountTypeConstant.ACC_TYPE_USER.getAccountType());
+			}
+
 			roles.add(grantedAuthority.getAuthority());
+			if (uiGrantsByGrantsMap.get(grantedAuthority.getAuthority()) != null) {
+				uiRoles.add(uiGrantsByGrantsMap.get(grantedAuthority.getAuthority()));
+			}
 		}
 		user.setRoles(roles);
+		user.setUiRoles(uiRoles);
 		return new ResponseEntity<UserDAO>(user, HttpStatus.OK);
 	}
 
