@@ -84,7 +84,7 @@ public enum GrantConstant implements Labeled {
 	public static Map<String, String> getUIGrantsByGrants() {
 		final Map<String, String> uiGrantsByGrantsMap = new HashMap<String, String>();
 		for (final GrantConstant grantConstant : GrantConstant.values()) {
-			uiGrantsByGrantsMap.put(grantConstant.getLabel(), grantConstant.getGrantUI());
+			uiGrantsByGrantsMap.put(grantConstant.getLabel().toUpperCase(), grantConstant.getGrantUI().toUpperCase());
 		}
 		return uiGrantsByGrantsMap;
 	}

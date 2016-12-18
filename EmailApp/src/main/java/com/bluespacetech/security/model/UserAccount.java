@@ -61,7 +61,7 @@ public class UserAccount extends BaseEntity implements Serializable {
 	@OneToMany(mappedBy = "userAccount", cascade = CascadeType.ALL, fetch = FetchType.EAGER,orphanRemoval=true)
 	private Collection<UserAccountUserGroup> userAccountUserGroups;
 
-	@Column(name = "EMAIL", nullable = false)
+	@Column(name = "EMAIL", nullable = false, unique = true)
 	private String email;
 
 	public void setUsername(final String username) {

@@ -36,6 +36,7 @@ public class EmailServerServiceImpl implements EmailServerService {
 	@Override
 	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('CREATE_EMAIL_SERVER'))")
 	public EmailServer createEmailServer(final EmailServer emailServer) throws BusinessException {
+		validateEmailServer(emailServer);
 		final EmailServer newEmailServer = emailServerRepository.save(emailServer);
 		return newEmailServer;
 	}
@@ -55,6 +56,7 @@ public class EmailServerServiceImpl implements EmailServerService {
 	@Override
 	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('UPDATE_EMAIL_SERVER'))")
 	public EmailServer updateEmailServer(EmailServer emailServer) throws BusinessException {
+		validateEmailServer(emailServer);
 		final EmailServer newEmailServer = emailServerRepository.save(emailServer);
 		return newEmailServer;
 	}
@@ -71,5 +73,18 @@ public class EmailServerServiceImpl implements EmailServerService {
 		return emailServerRepository.findOne(id);
 	}
 
+	@Override
+	public EmailServer getDefaultEmailServer() throws BusinessException {
+		final List<EmailServer> emailServers = emailServerRepository.findByDefaultServer(true);
+		return emailServers != null && emailServers.size() > 0 ? emailServers.get(0) : null;
+	}
+
+	private void validateEmailServer(EmailServer emailServer) throws BusinessException {
+		if (emailServer.getDefaultServer() != null && emailServer.getDefaultServer() != null) {
+			if (getDefaultEmailServer() != null) {
+				throw new BusinessException("Default server already exists.");
+			}
+		}
+	}
 
 }

@@ -26,8 +26,10 @@ public interface EmailServerService {
 	EmailServer updateEmailServer(final EmailServer emailServer) throws BusinessException;
 
 	EmailServer findEmailServerByName(final String emailServerName) throws BusinessException;
-	
+
 	EmailServer getEmailServerById(final Long id) throws BusinessException;
+
+	EmailServer getDefaultEmailServer() throws BusinessException;
 
 	List<EmailServer> findAll();
 

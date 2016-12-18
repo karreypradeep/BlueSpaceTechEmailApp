@@ -2,7 +2,11 @@ package com.bluespacetech.security.service;
 
 import java.util.List;
 
+import javax.mail.MessagingException;
+
+import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.bluespacetech.core.exceptions.ApplicationException;
 import com.bluespacetech.core.exceptions.BusinessException;
 import com.bluespacetech.core.utility.ViewUtil;
+import com.bluespacetech.notifications.email.worker.EmailUserAccountWorker;
 import com.bluespacetech.security.model.UserAccount;
 import com.bluespacetech.security.model.UserAccountUserGroup;
 import com.bluespacetech.security.repository.UserAccountRepository;
@@ -29,6 +34,9 @@ public class BlueSpaceTechUserAccountServiceImpl implements BlueSpaceTechUserAcc
 
 	@Autowired
 	UserAccountRepositoryCustom userAccountRepositoryCustom;
+
+	@Autowired
+	EmailUserAccountWorker emailUserAccountWorker;
 
 	@Override
 	@PreAuthorize("permitAll")
@@ -59,14 +67,20 @@ public class BlueSpaceTechUserAccountServiceImpl implements BlueSpaceTechUserAcc
 	public UserAccount createUserAccount(final UserAccount userAccount)
 			throws BusinessException {
 		final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-		final String hashedPassword = passwordEncoder.encode("admin@123");
+		final String randomPassword = RandomStringUtils.randomAlphanumeric(8);
+		final String hashedPassword = passwordEncoder.encode(randomPassword);
 		userAccount.setPassword(hashedPassword);
 
 		for (final UserAccountUserGroup userAccountUserGroup : userAccount.getUserAccountUserGroups()) {
 			userAccountUserGroup.setUserAccount(userAccount);
 		}
-
-		return userAccountRepository.save(userAccount);
+		final UserAccount newUserAccount = userAccountRepository.save(userAccount);
+		try {
+			emailUserAccountWorker.sendEmail(newUserAccount, randomPassword);
+		} catch (MailException | InterruptedException | MessagingException e) {
+			throw new BusinessException(e);
+		}
+		return newUserAccount;
 	}
 
 	@Override
@@ -76,7 +90,6 @@ public class BlueSpaceTechUserAccountServiceImpl implements BlueSpaceTechUserAcc
 		for (final UserAccountUserGroup userAccountUserGroup : userAccount.getUserAccountUserGroups()) {
 			userAccountUserGroup.setUserAccount(userAccount);
 		}
-
 		return userAccountRepository.save(userAccount);
 	}
 
@@ -94,7 +107,7 @@ public class BlueSpaceTechUserAccountServiceImpl implements BlueSpaceTechUserAcc
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') or hasAuthority('ACC_TYPE_EMPLOYEE'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or hasAuthority('ACC_TYPE_ADMIN') or hasAuthority('ACC_TYPE_EMPLOYEE') or hasAuthority('ACC_TYPE_USER') ")
 	public void changePasswordUserAccount(final String oldPassword,final String newPassword,
 			final String confirmPassword) throws BusinessException {
 

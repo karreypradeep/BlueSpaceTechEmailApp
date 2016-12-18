@@ -57,7 +57,10 @@ public class EmailServer extends BaseEntity implements Serializable {
 	@NotEmpty(message = "Host is mandatory.")
 	@Column(name = "EMAIL_PASSWORD")
 	private String emailPassword;
-	
+
+	@Column(name = "DEFAULT_SERVER")
+	private Boolean defaultServer;
+
 	public String getEmailUsername() {
 		return emailUsername;
 	}
@@ -162,6 +165,21 @@ public class EmailServer extends BaseEntity implements Serializable {
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	/**
+	 * @return the defaultServer
+	 */
+	public Boolean getDefaultServer() {
+		return defaultServer;
+	}
+
+	/**
+	 * @param defaultServer
+	 *            the defaultServer to set
+	 */
+	public void setDefaultServer(Boolean defaultServer) {
+		this.defaultServer = defaultServer;
 	}
 
 }

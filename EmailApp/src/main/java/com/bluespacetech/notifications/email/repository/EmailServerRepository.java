@@ -6,6 +6,8 @@
  */
 package com.bluespacetech.notifications.email.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -18,5 +20,7 @@ import com.bluespacetech.notifications.email.entity.EmailServer;
 public interface EmailServerRepository extends JpaRepository<EmailServer, Long> {
 
 	EmailServer findByName(final String name);
+
+	List<EmailServer> findByDefaultServer(final Boolean defaultServer);
 
 }

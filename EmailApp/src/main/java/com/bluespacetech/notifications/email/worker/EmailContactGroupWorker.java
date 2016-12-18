@@ -13,10 +13,10 @@ import com.bluespacetech.notifications.email.valueobjects.EmailVO;
 @Component
 public class EmailContactGroupWorker{
 
-	private final JavaMailSender  javaMailSender;
+	private final JavaMailSender javaMailSender;
 
 	@Autowired
-	public EmailContactGroupWorker(JavaMailSender javaMailSender){
+	public EmailContactGroupWorker(JavaMailSender javaMailSender) {
 		this.javaMailSender = javaMailSender;
 	}
 

@@ -54,11 +54,11 @@ public class UserController extends AbstractBaseController {
 			}
 
 			roles.add(grantedAuthority.getAuthority());
-			if (uiGrantsByGrantsMap.get(grantedAuthority.getAuthority()) != null) {
-				uiRoles.add(uiGrantsByGrantsMap.get(grantedAuthority.getAuthority()));
+			if (uiGrantsByGrantsMap.get(grantedAuthority.getAuthority().toUpperCase()) != null) {
+				uiRoles.add(uiGrantsByGrantsMap.get(grantedAuthority.getAuthority().toUpperCase()));
 			}
 		}
-		user.setRoles(roles);
+		// user.setRoles(roles);
 		user.setUiRoles(uiRoles);
 		return new ResponseEntity<UserDAO>(user, HttpStatus.OK);
 	}
