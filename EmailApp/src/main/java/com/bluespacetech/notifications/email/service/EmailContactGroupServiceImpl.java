@@ -34,7 +34,7 @@ public class EmailContactGroupServiceImpl implements EmailContactGroupService {
 	private EmailContactGroupRepository emailContactGroupRepository;
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('CREATE_EMAIL_CONTACT'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or hasAuthority('ACCESS_SEND_EMAIL')")
 	public EmailContactGroup createEmailContactGroup(final EmailContactGroup emailContactGroup)
 			throws BusinessException {
 		final EmailContactGroup newEmailContactGroup = emailContactGroupRepository.save(emailContactGroup);
@@ -42,7 +42,7 @@ public class EmailContactGroupServiceImpl implements EmailContactGroupService {
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('CREATE_EMAIL_CONTACT'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or hasAuthority('ACCESS_SEND_EMAIL')")
 	public List<EmailContactGroup> createEmailContactGroups(final List<EmailContactGroup> emailContactGroups)
 			throws BusinessException {
 		final List<EmailContactGroup> result = emailContactGroupRepository.save(emailContactGroups);
@@ -50,19 +50,19 @@ public class EmailContactGroupServiceImpl implements EmailContactGroupService {
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('CREATE_EMAIL_CONTACT'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or hasAuthority('ACCESS_SEND_EMAIL')")
 	public List<EmailContactGroup> findAll() {
 		return emailContactGroupRepository.findAll();
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('CREATE_EMAIL_CONTACT'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or hasAuthority('ACCESS_SEND_EMAIL')")
 	public EmailContactGroup findByContactIdAndGroupIdAndRandomNumber(Long contactId, Long groupId, Long randomNumber) {
 		return emailContactGroupRepository.findByContactIdAndGroupIdAndRandomNumber(contactId, groupId, randomNumber);
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('CREATE_EMAIL_CONTACT'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or hasAuthority('ACCESS_SEND_EMAIL')")
 	public EmailContactGroup updateEmailContactGroup(EmailContactGroup emailContactGroup) throws BusinessException {
 		final EmailContactGroup newEmailContactGroup = emailContactGroupRepository.save(emailContactGroup);
 		return newEmailContactGroup;

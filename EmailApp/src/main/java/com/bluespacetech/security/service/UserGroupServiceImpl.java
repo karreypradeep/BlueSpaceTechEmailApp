@@ -28,31 +28,31 @@ public class UserGroupServiceImpl implements UserGroupService {
 	UserGroupRepositoryCustom userGroupRepositoryCustom;
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('ACCESS_USER_GROUP'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACCESS_USER_GROUPS'))")
 	public UserGroup findUserGroupByGroupName(final String groupName) {
 		return userGroupRepository.findUserGroupByGroupName(groupName);
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('ACCESS_USER_GROUP'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACCESS_USER_GROUPS'))")
 	public List<UserGroup> findByDescriptionLike(final String description) {
 		return userGroupRepository.findByDescriptionLike(description);
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('ACCESS_USER_GROUP'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACCESS_USER_GROUPS'))")
 	public List<UserGroup> getAllUserGroups() {
 		return userGroupRepository.findAll();
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('ACCESS_USER_GROUP'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACCESS_USER_GROUPS'))")
 	public UserGroup getUserGroupById(final Long userGroupId) {
 		return userGroupRepository.findOne(userGroupId);
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('CREATE_USER_GROUP'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('CREATE_USER_GROUPS'))")
 	public UserGroup createUserGroup(final UserGroup userGroup) throws BusinessException {
 		for(final UserGroupUserRole userGroupUserRole :userGroup.getUserGroupUserRoles()){
 			userGroupUserRole.setUserGroup(userGroup);
@@ -61,7 +61,7 @@ public class UserGroupServiceImpl implements UserGroupService {
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('UPDATE_USER_GROUP'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('UPDATE_USER_GROUPS'))")
 	public UserGroup updateUserGroup(final UserGroup userGroup) throws BusinessException {
 		for(final UserGroupUserRole userGroupUserRole :userGroup.getUserGroupUserRoles()){
 			userGroupUserRole.setUserGroup(userGroup);
@@ -70,26 +70,26 @@ public class UserGroupServiceImpl implements UserGroupService {
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('DELETE_USER_GROUP'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('DELETE_USER_GROUPS'))")
 	public void deleteUserGroup(final Long userGroupId) {
 		userGroupRepository.delete(userGroupId);
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('ACCESS_USER_GROUP'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACCESS_USER_GROUPS'))")
 	public List<UserGroup> findByGroupNameLike(final String groupName) {
 		return userGroupRepository.findByGroupNameLike(groupName);
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('ACCESS_USER_GROUP'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACCESS_USER_GROUPS'))")
 	public List<UserGroup> findUserGroupsBySearchCriteria(
 			final UserGroupSearchCriteria sectionSearchCriteria) {
 		return userGroupRepositoryCustom.findUserGroupsBySearchCriteria(sectionSearchCriteria);
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('ACCESS_USER_GROUP'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACCESS_USER_GROUPS'))")
 	public List<UserGroup> getUserGroupByIds(final List<Long> userGroupIds) {
 		return userGroupRepository.findAll(userGroupIds);
 	}

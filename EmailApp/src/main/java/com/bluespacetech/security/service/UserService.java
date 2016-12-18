@@ -105,7 +105,8 @@ public class UserService implements UserDetailsService {
 			grantedAuthorities.add(new SimpleGrantedAuthority(
 					UserAccountTypeConstant.ACC_TYPE_EMPLOYEE.getAccountType()));
 		}
-		System.out.println("inside loadUserByUsername() :grantedAuthorities " + grantedAuthorities);
+		// System.out.println("inside loadUserByUsername() :grantedAuthorities "
+		// + grantedAuthorities);
 		if (grantedAuthorities.isEmpty()) {
 			throw new UsernameNotFoundException(
 					"User does not have granted authorities");

@@ -45,25 +45,25 @@ public class BlueSpaceTechUserAccountServiceImpl implements BlueSpaceTechUserAcc
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('ACCESS_USER_ACCOUNT'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or hasAuthority('ACCESS_USERS')")
 	public List<UserAccount> getAllUserAccounts() {
 		return userAccountRepository.findAll();
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('ACCESS_USER_ACCOUNT'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or hasAuthority('ACCESS_USERS')")
 	public UserAccount getUserAccountById(final Long userAccountId) {
 		return userAccountRepository.findOne(userAccountId);
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('ACCESS_USER_ACCOUNT'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or hasAuthority('ACCESS_USERS')")
 	public List<UserAccount> getUserAccountByIds(final List<Long> userAccountIds) {
 		return userAccountRepository.findAll(userAccountIds);
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('CREATE_USER_ACCOUNT'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or hasAuthority('CREATE_USERS')")
 	public UserAccount createUserAccount(final UserAccount userAccount)
 			throws BusinessException {
 		final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -84,7 +84,7 @@ public class BlueSpaceTechUserAccountServiceImpl implements BlueSpaceTechUserAcc
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('UPDATE_USER_ACCOUNT'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or hasAuthority('UPDATE_USERS')")
 	public UserAccount updateUserAccount(final UserAccount userAccount)
 			throws BusinessException {
 		for (final UserAccountUserGroup userAccountUserGroup : userAccount.getUserAccountUserGroups()) {
@@ -94,20 +94,20 @@ public class BlueSpaceTechUserAccountServiceImpl implements BlueSpaceTechUserAcc
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('DELETE_USER_ACCOUNT'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or hasAuthority('DELETE_USERS')")
 	public void deleteUserAccount(final Long userAccountId) {
 		userAccountRepository.delete(userAccountId);
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('ACCESS_USER_ACCOUNT'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or hasAuthority('ACCESS_USERS')")
 	public List<UserAccount> findUserAccountsBySearchCriteria(
 			final UserAccountSearchCriteria userAccountSearchCriteria) {
 		return userAccountRepositoryCustom.findUserAccountsBySearchCriteria(userAccountSearchCriteria);
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or hasAuthority('ACC_TYPE_ADMIN') or hasAuthority('ACC_TYPE_EMPLOYEE') or hasAuthority('ACC_TYPE_USER') ")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or hasAuthority('ACC_TYPE_ADMIN') or hasAuthority('ACC_TYPE_USER') or hasAuthority('ACC_TYPE_EMPLOYEE')")
 	public void changePasswordUserAccount(final String oldPassword,final String newPassword,
 			final String confirmPassword) throws BusinessException {
 

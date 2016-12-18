@@ -28,31 +28,31 @@ public class UserRoleServiceImpl implements UserRoleService {
 	UserRoleRepositoryCustom userRoleRepositoryCustom;
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('ACCESS_USER_ROLE'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACCESS_USER_ROLES'))")
 	public UserRole findUserRoleByRoleName(final String roleName) {
 		return userRoleRepository.findUserRoleByRoleName(roleName);
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('ACCESS_USER_ROLE'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACCESS_USER_ROLES'))")
 	public List<UserRole> findByDescriptionLike(final String description) {
 		return userRoleRepository.findByDescriptionLike(description);
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('ACCESS_USER_ROLE'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACCESS_USER_ROLES'))")
 	public List<UserRole> getAllUserRoles() {
 		return userRoleRepository.findAll();
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('ACCESS_USER_ROLE'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACCESS_USER_ROLES'))")
 	public UserRole getUserRoleById(final Long userRoleId) {
 		return userRoleRepository.findOne(userRoleId);
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('CREATE_USER_ROLE'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('CREATE_USER_ROLES'))")
 	public UserRole createUserRole(final UserRole userRole) throws BusinessException {
 		for(final UserRoleAuthority userRoleAuthority :userRole.getUserRoleAuthorities()){
 			userRoleAuthority.setUserRole(userRole);
@@ -61,7 +61,7 @@ public class UserRoleServiceImpl implements UserRoleService {
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('UPDATE_USER_ROLE'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('UPDATE_USER_ROLES'))")
 	public UserRole updateUserRole(final UserRole userRole) throws BusinessException {
 		for(final UserRoleAuthority userRoleAuthority :userRole.getUserRoleAuthorities()){
 			userRoleAuthority.setUserRole(userRole);
@@ -70,26 +70,26 @@ public class UserRoleServiceImpl implements UserRoleService {
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('DELETE_USER_ROLE'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('DELETE_USER_ROLES'))")
 	public void deleteUserRole(final Long userRoleId) {
 		userRoleRepository.delete(userRoleId);
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('ACCESS_USER_ROLE'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACCESS_USER_ROLES'))")
 	public List<UserRole> findByRoleNameLike(final String roleName) {
 		return userRoleRepository.findByRoleNameLike(roleName);
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('ACCESS_USER_ROLE'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACCESS_USER_ROLES'))")
 	public List<UserRole> findUserRolesBySearchCriteria(
 			final UserRoleSearchCriteria sectionSearchCriteria) {
 		return userRoleRepositoryCustom.findUserRolesBySearchCriteria(sectionSearchCriteria);
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACC_TYPE_ADMIN') and hasAuthority('ACCESS_USER_ROLE'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACCESS_USER_ROLES'))")
 	public List<UserRole> getUserRoleByIds(final List<Long> userRoleIds) {
 		return  userRoleRepository.findAll(userRoleIds);
 	}

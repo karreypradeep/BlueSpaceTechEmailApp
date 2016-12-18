@@ -36,37 +36,37 @@ public class ContactGroupServiceImpl implements ContactGroupService {
 	private ContactGroupRepositoryCustom contactGroupRepositoryCustom;
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACCESS_CONTACT'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACCESS_CONTACTS'))")
 	public ContactGroup getContactGroupById(ContactGroupPK contactGroupPK) {
 		return contactGroupRepository.findOne(contactGroupPK);
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('CREATE_CONTACT'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('CREATE_CONTACTS'))")
 	public ContactGroup createContactGroup(ContactGroup contactGroup) throws BusinessException {
 		return contactGroupRepository.save(contactGroup);
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('DELETE_CONTACT'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('DELETE_CONTACTS'))")
 	public void deleteContactGroup(ContactGroupPK contactGroupPK) throws BusinessException {
 		contactGroupRepository.delete(contactGroupPK);
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACCESS_CONTACT'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACCESS_CONTACTS'))")
 	public List<ContactGroup> findAll() {
 		return contactGroupRepository.findAll();
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('UPDATE_CONTACT'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('UPDATE_CONTACTS'))")
 	public ContactGroup updateContactGroup(ContactGroup contactGroup) throws BusinessException {
 		return contactGroupRepository.save(contactGroup);
 	}
 
 	@Override
-	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACCESS_CONTACT'))")
+	@PreAuthorize("hasAuthority('ACC_TYPE_SUPER_ADMIN') or (hasAuthority('ACCESS_CONTACTS'))")
 	public ContactGroup unsubscribeContactGroup(Long contactId, Long groupId) throws BusinessException {
 		final ContactGroup contactGroup = contactGroupRepositoryCustom.getContactGroupByContactIdAndGroupId(contactId,
 				groupId);
