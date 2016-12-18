@@ -104,6 +104,8 @@ public class UserService implements UserDetailsService {
 				.getUserAccountType())) {
 			grantedAuthorities.add(new SimpleGrantedAuthority(
 					UserAccountTypeConstant.ACC_TYPE_EMPLOYEE.getAccountType()));
+		} else if (UserAccountTypeConstant.ACC_TYPE_USER.equals(userAccount.getUserAccountType())) {
+			grantedAuthorities.add(new SimpleGrantedAuthority(UserAccountTypeConstant.ACC_TYPE_USER.getAccountType()));
 		}
 		// System.out.println("inside loadUserByUsername() :grantedAuthorities "
 		// + grantedAuthorities);
