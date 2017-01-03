@@ -25,6 +25,7 @@ import com.bluespacetech.notifications.email.service.EmailContactGroupService;
 import com.bluespacetech.notifications.email.service.EmailServerPropertiesService;
 import com.bluespacetech.notifications.email.service.EmailServerService;
 import com.bluespacetech.notifications.email.util.ContactGroupMailMessage;
+import com.bluespacetech.security.service.UserAccountService;
 
 public class ContactGroupMailMessageItemWriter implements ItemWriter<ContactGroupMailMessage>, InitializingBean {
 
@@ -37,6 +38,8 @@ public class ContactGroupMailMessageItemWriter implements ItemWriter<ContactGrou
 	private EmailServerService emailServerService;
 
 	private EmailServerPropertiesService emailServerPropertiesService;
+
+	private UserAccountService userAccountService;
 
 	/**
 	 * A {@link JavaMailSender} to be used to send messages in
@@ -94,6 +97,10 @@ public class ContactGroupMailMessageItemWriter implements ItemWriter<ContactGrou
 			Properties oldMailProperties = null;
 			if (mailSender instanceof JavaMailSenderImpl) {
 				oldMailProperties = ((JavaMailSenderImpl) mailSender).getJavaMailProperties();
+				// final String userName = ViewUtil.getPrincipal();
+				// final UserAccount userAccount =
+				// userAccountService.findUserAccountByUsername(userName);
+				// final String userEmail = userAccount.getEmail();
 				if (emailServers != null) {
 					final List<EmailServerProperties> emailServerPropertiesOfServers = emailServerPropertiesService
 							.findByEmailServers(emailServers);
@@ -199,6 +206,14 @@ public class ContactGroupMailMessageItemWriter implements ItemWriter<ContactGrou
 	 */
 	public void setEmailServerPropertiesService(EmailServerPropertiesService emailServerPropertiesService) {
 		this.emailServerPropertiesService = emailServerPropertiesService;
+	}
+
+	/**
+	 * @param userAccountService
+	 *            the userAccountService to set
+	 */
+	public void setUserAccountService(UserAccountService userAccountService) {
+		this.userAccountService = userAccountService;
 	}
 
 }

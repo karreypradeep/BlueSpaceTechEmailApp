@@ -23,6 +23,7 @@ import com.bluespacetech.notifications.email.service.EmailServerPropertiesServic
 import com.bluespacetech.notifications.email.service.EmailServerService;
 import com.bluespacetech.notifications.email.util.ContactGroupMailMessage;
 import com.bluespacetech.notifications.email.valueobjects.EmailContactGroupVO;
+import com.bluespacetech.security.service.UserAccountService;
 
 @Configuration
 @EnableBatchProcessing
@@ -51,6 +52,9 @@ public class EmailBatchConfiguration {
 
 	@Autowired
 	private VelocityEngine velocityEngine;
+
+	@Autowired
+	private UserAccountService userAccountService;
 
 	private static String QUERY_FIND_CONTACTS = "SELECT first_name, last_name, email, group_id, contact_id FROM contacts "
 			+ "C, contact_group CG WHERE CG.contact_id = C.ID AND CG.unsubscribed = 0";
@@ -82,6 +86,7 @@ public class EmailBatchConfiguration {
 		writer.setEmailServerService(emailServerService);
 		writer.setEmailServerPropertiesService(emailServerPropertiesService);
 		writer.setEmailContactGroupService(emailContactGroupService);
+		writer.setUserAccountService(userAccountService);
 		return writer;
 	}
 
